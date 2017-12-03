@@ -1,0 +1,101 @@
+"Delete a category
+Standard method Delete with status code 200_<Ok> (Delete by id ) , Authorized users only"
+---
+tags:
+- "Categories"
+description: "Functionalities (Deletion) and responses from the categories endpoint (For a specific category) "
+summary: "Functionalities (Deletion) and responses from the categories endpoint  (For a specific category) "
+operationId: "Delete Category by id"
+consumes:
+  - "application/json"
+produces:
+- "application/json"
+parameters:
+-   name: "Authorization"
+    in: "header"
+    description: "The users access token is passed in for authorization     as 'Bearer <user_token>'"
+    required: true
+    type: string
+
+- name: "id"
+  in: "path"
+  description: "ID of Category to return"
+  required: true
+  type: "integer"
+  format: "int64"
+responses:
+  200:
+    description: |
+      "Recipe category is successfully deleted <OK>"
+    schema:
+      $ref: "#/definitions/successfully_deleted_category"
+  300:
+    description: |
+      If the user does not provide an access token
+    schema:
+      $ref: "#/definitions/Failed_logout"
+  401:
+    description: |
+      If the user provided a token that does not exist or a token that is expired. The error message is returned in this case
+    schema:
+      $ref: "#/definitions/Failed_get_category"
+
+  404:
+    description: |
+      The category does not exist
+    schema:
+      $ref: "#/definitions/Category_does_not_exist"
+
+definitions:
+  Failed_logout:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Please Provide an access token'
+
+
+
+  # categories
+
+
+
+      Recipe Category Name:
+        type: "string"
+        default: "Pastries"
+
+      Recipe Category Detail:
+        type: "string"
+        default: "Cakes, Donuts, etc"
+
+      Date Created:
+        type: "string"
+        default: "12-10-2018 4:32 PM"
+
+      Date Modified:
+        type: "string"
+        default: "12-27-2018 15:32"
+
+  Failed_get_category:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: '<Message containing the error>'
+
+
+
+  Category_does_not_exist:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'The category does not exist, Would you like to create one?'
+
+  successfully_deleted_category:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Category 1 was deleted successfully'
+

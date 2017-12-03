@@ -1,0 +1,50 @@
+"logout a user from the Api
+Uses standard method post. Blacklists the user token and thus the user has to login to recieve a new token"
+---
+tags:
+- "auth"
+description: "Blacklists the user token and thus the user has to loggin to recieve a new token"
+summary: "Logout a user from the api"
+operationId: "Logout a user"
+consumes:
+  - "application/json"
+produces:
+- "application/json"
+parameters:
+  - description: "The user token to be blacklisted is passed in as 'Bearer <user_token>'"
+    in: "header"
+    name: "Authorization"
+    required: true
+    type: string
+responses:
+  200:
+    description: |
+      the user is successfully Logged out
+    schema:
+      $ref: "#/definitions/successfully_Loggedout"
+  300:
+    description: |
+      If the user does not provide an access token
+    schema:
+      $ref: "#/definitions/Failed_logout"
+
+
+
+
+definitions:
+
+  # Logout schema
+
+  Failed_logout:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Please Provide an access token'
+
+  successfully_Loggedout:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'You have successfully logged out'

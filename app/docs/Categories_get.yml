@@ -1,0 +1,86 @@
+"Views recipe categories
+Returns all the users recipe categories"
+---
+consumes:
+  - application/json
+definitions:
+  Failed_category_post:
+    properties:
+      Message:
+        default: "please use keys name and detail"
+        type: string
+    type: object
+  Failed_get_category:
+    properties:
+      Message:
+        default: "<Message containing the error>"
+        type: string
+    type: object
+  add_category:
+    properties:
+      detail:
+        default: "Cakes, Pasta, etc"
+        type: string
+      name:
+        default: Pastries
+        type: string
+    type: object
+  successfully_get_categories:
+    properties:
+      ? "Date Created"
+      :
+        default: "12-10-2018 4:32 PM"
+        type: string
+      ? "Date Modified"
+      :
+        default: "12-27-2018 15:32"
+        type: string
+      ? "Recipe Category Detail"
+      :
+        default: "Cakes, Donuts, etc"
+        type: string
+      ? "Recipe Category Name"
+      :
+        default: Pastries
+        type: string
+      id:
+        default: 1
+        type: integer
+    type: object
+description: "Functionalities (GET) and responses from the categories endpoint "
+operationId: "Get a user's categories"
+parameters:
+  -
+    description: "The users access token is passed in for authorization     as 'Bearer <user_token>'"
+    in: header
+    name: Authorization
+    required: true
+    type: string
+  -
+    description: "The page to be outputed (Results are paginated)"
+    in: query
+    name: page
+    type: integer
+  -
+    description: "Number of results per page (default is 20)"
+    in: query
+    name: per_page
+    type: integer
+produces:
+  - application/json
+responses:
+  200:
+    description: "\"Recipe categories are successfully returned <OK>\"\n"
+    schema:
+      $ref: "#/definitions/successfully_get_categories"
+  300:
+    description: "If the user does not provide an access token\n"
+    schema:
+      $ref: "#/definitions/Failed_logout"
+  401:
+    description: "If the user provided a token that does not exist or a token that is expired. The error message is returned in this case\n"
+    schema:
+      $ref: "#/definitions/Failed_get_category"
+summary: "Functionalities (GET) and responses from the categories endpoint "
+tags:
+  - Categories

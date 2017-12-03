@@ -1,0 +1,131 @@
+"Search for a Recipes inside a Specific Category.
+This searches a category for Recipes with similar or equal names to the get parameter q"
+---
+tags:
+- "Recipes"
+description: "This searches a category for Recipes with similar or equal names to the get
+  parameter q"
+summary: "This searches a category for Recipes with similar or equal names to the get
+  parameter q"
+consumes:
+  - "application/json"
+produces:
+- "application/json"
+parameters:
+-   name: "Authorization"
+    in: "header"
+    description: "The users access token is passed in for authorization     as 'Bearer <user_token>'"
+    required: true
+    type: string
+
+-   description: "The page to be outputted (Results are paginated)"
+    in: query
+    name: "page"
+    type: integer
+-   description: "Number of results per page (default is 20)"
+    in: query
+    name: "per_page"
+    type: integer
+
+-   description: "The category name to be queried"
+    in: query
+    name: "q"
+    type: "string"
+responses:
+  200:
+    description: |
+      "Recipes inside  category are successfully returned <OK>
+      Else a message is returned with
+      {Sorry we could not find what you are looking for}"
+    schema:
+      $ref: "#/definitions/successfully_get_recipes"
+  300:
+    description: |
+      If the user does not provide an access token
+    schema:
+      $ref: "#/definitions/No_accesstoken_provided"
+  401:
+    description: |
+      If the user provided a token that does not exist or a token that is expired. The error message is returned in this case
+    schema:
+      $ref: "#/definitions/Failed_get_category"
+  403:
+    description: |
+      If the Category does not contain a recipe with similar names
+    schema:
+      $ref: "#/definitions/Empty_search_recipe"
+  404:
+    description: |
+      If the user does not provide a search query i.e provides an empty string
+    schema:
+      $ref: "#/definitions/Empty_search_query"
+
+  405:
+    description: |
+      If the recipe category does not exist
+    schema:
+      $ref: "#/definitions/None_exist_category"
+
+
+
+definitions:
+  No_accesstoken_provided:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Please Provide an access token'
+
+
+
+  successfully_get_recipes:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        default: 1
+
+
+      Name:
+        type: "string"
+        default: "Chocolate cake"
+
+      Recipe:
+        type: "string"
+        default: "Bake for two hours in oven. Blah blah blah and voila! COOKED!!"
+
+      Date Created:
+        type: "string"
+        default: "12-10-2018 4:32 PM"
+
+      Date Modified:
+        type: "string"
+        default: "12-27-2018 15:32"
+
+  Failed_get_category:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: '<Message containing the error>'
+
+  Empty_search_query:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Please provide a search query'
+
+  Empty_search_recipe:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Sorry we could not find what you are looking for'
+
+  None_exist_category:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Category does not exist'

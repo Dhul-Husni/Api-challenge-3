@@ -1,0 +1,96 @@
+"Login a user with the Api
+Uses standard method post"
+---
+tags:
+- "auth"
+description: "Login a user with the api"
+operationId: "Login a user"
+summary: "Login a user with the api"
+consumes:
+  - "application/json"
+produces:
+- "application/json"
+parameters:
+- in: "body"
+  name: "body"
+  description: "User details needed during login"
+  required: true
+  schema:
+    $ref: "#/definitions/login"
+responses:
+  200:
+    description: |
+      the user is successfully Logged in
+    schema:
+      $ref: "#/definitions/successfully_Loggedin"
+  300:
+    description: |
+      If an error occured during the user login
+    schema:
+      $ref: "#/definitions/Failed_login"
+  301:
+    description: |
+        Password Mismatch
+    schema:
+      $ref: "#/definitions/Failed_login_auth"
+  401:
+    description: |
+      Email address does not match any
+    schema:
+      $ref: "#/definitions/Failed_email_login"
+  500:
+    description: |
+      If there is an Exception during the proccess
+    schema:
+      $ref: "#/definitions/Exception"
+
+
+definitions:
+  # Login schema
+  login:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        default: "Probook@protonmail.com"
+      password:
+        type: "string"
+        default: "Password1234"
+
+  successfully_Loggedin:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'You have successfully logged in'
+      Access token:
+        type: "string"
+        default: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2V4YW1wbGUuYXV0aDAuY29tLyIsImF1ZCI6Imh0dHBzOi8vYXBpLmV4YW1wbGUuY29tL2NhbGFuZGFyL3YxLyIsInN1YiI6InVzcl8xMjMiLCJpYXQiOjE0NTg3ODU3OTYsImV4cCI6MTQ1ODg3MjE5Nn0.CA7eaHjIHz5NxeIJoFK9krqaeZrPLwmMmgI_XiQiIkQ"
+
+  Failed_login:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Something went wrong. Please try again'
+
+  Failed_login_auth:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Password Mismatch. Please try again'
+
+  Failed_email_login:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Email address does not match any. Please try again'
+
+  Exception:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: '<Error>'

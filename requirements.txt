@@ -1,0 +1,7 @@
+flask
+flask-api
+flask-migrate
+flask-script
+psycopg2
+PyJWT
+flasgger

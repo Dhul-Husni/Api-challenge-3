@@ -1,0 +1,28 @@
+language: python
+python:
+  - 3.6
+  - nightly
+
+services:
+  - postgresql
+
+install:
+  - pip install flask-sqlalchemy
+  - pip3 install -r requirements.txt
+  - pip3 install coveralls
+before_script:
+  - psql -c 'CREATE DATABASE test_db;' -U postgres
+  - psql -c 'CREATE DATABASE challenge_3_api;' -U postgres
+  - sh challenge.sh
+
+script:
+  - pytest
+  - nosetests --exe -v
+  - nosetests --exe --with-coverage --cover-package=app
+  - coveralls
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+after_success: 
+  - "coveralls"
+

@@ -1,0 +1,104 @@
+"Create categories.
+Users can create categories by doing a post request on the endpoint (Authorization is required)
+Returns a standard 201 Created status code"
+---
+tags:
+- "Categories"
+description: "Functionalities (POST) and responses from the categories endpoint "
+summary: "Functionalities (POST) and responses from the categories endpoint "
+operationId: "Create a category"
+consumes:
+  - "application/json"
+produces:
+- "application/json"
+parameters:
+-   name: "Authorization"
+    in: "header"
+    description: "The users access token is passed in for authorization     as 'Bearer <user_token>'"
+    required: true
+    type: string
+
+-   description: "The page to be outputed (Results are paginated)"
+    in: query
+    name: "page"
+    type: integer
+-   description: "Number of results per page (default is 20)"
+    in: query
+    name: "per_page"
+    type: integer
+
+-   description: "Details needed during adding category"
+    in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/add_category"
+
+responses:
+  201:
+    description: |
+      "Recipe categories have been added successfully"
+    schema:
+      $ref: "#/definitions/successfully_get_categories"
+  203:
+    description: |
+      If the user does not fill out the parameter name and detail
+    schema:
+      $ref: "#/definitions/Failed_category_post"
+
+  300:
+    description: |
+      If the user does not provide an access token
+    schema:
+      $ref: "#/definitions/Failed_logout"
+definitions:
+  Failed_logout:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Please Provide an access token'
+
+  # categories
+
+  successfully_get_categories:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        default: 1
+
+
+      Recipe Category Name:
+        type: "string"
+        default: "Pastries"
+
+      Recipe Category Detail:
+        type: "string"
+        default: "Cakes, Donuts, etc"
+
+      Date Created:
+        type: "string"
+        default: "12-10-2018 4:32 PM"
+
+      Date Modified:
+        type: "string"
+        default: "12-27-2018 15:32"
+
+  add_category:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        default: 'Pastries'
+      detail:
+        type: "string"
+        default: 'Cakes, Pasta, etc'
+
+  Failed_category_post:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'please use keys name and detail'
+

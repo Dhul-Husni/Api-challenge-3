@@ -1,0 +1,108 @@
+"Get all Recipes in a specific Category.
+Uses standard method GET"
+---
+tags:
+- "Recipes"
+description: "Functionalities (GET) and responses from the Recipes endpoint "
+summary: "Functionalities (GET) and responses from the Recipes endpoint "
+operationId: "Get a user's Recipes"
+consumes:
+  - "application/json"
+produces:
+- "application/json"
+parameters:
+-   name: "Authorization"
+    in: "header"
+    description: "The users access token is passed in for authorization     as 'Bearer <user_token>'"
+    required: true
+    type: string
+
+-   description: "The page to be outputted (Results are paginated)"
+    in: query
+    name: "page"
+    type: integer
+-   description: "Number of results per page (default is 20)"
+    in: query
+    name: "per_page"
+    type: integer
+responses:
+  200:
+    description: |
+      Recipes in the category are successfully returned <OK>
+    schema:
+      $ref: "#/definitions/successfully_get_recipes"
+  300:
+    description: |
+      If the user does not provide an access token
+    schema:
+      $ref: "#/definitions/No_accesstoken_provided"
+  401:
+    description: |
+      If the user provided a token that does not exist or a token that is expired. The error message is returned in this case
+    schema:
+      $ref: "#/definitions/Failed_get_category"
+  404:
+    description: |
+      If the category does not contain any recipes
+    schema:
+      $ref: "#/definitions/Empty_category"
+  405:
+    description: |
+      If the recipe category does not exist
+    schema:
+      $ref: "#/definitions/None_exist_category"
+
+definitions:
+  successfully_get_recipes:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        default: 1
+
+
+      Name:
+        type: "string"
+        default: "Chocolate cake"
+
+      Recipe:
+        type: "string"
+        default: "Bake for two hours in oven. Blah blah blah and voila! COOKED!!"
+
+      Date Created:
+        type: "string"
+        default: "12-10-2018 4:32 PM"
+
+      Date Modified:
+        type: "string"
+        default: "12-27-2018 15:32"
+
+  Failed_get_category:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: '<Message containing the error>'
+
+  Empty_category:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'No recipes added yet'
+
+  None_exist_category:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Category does not exist'
+
+  No_accesstoken_provided:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Please Provide an access token'
+
+
