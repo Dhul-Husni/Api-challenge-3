@@ -7,7 +7,7 @@ class Config:
     SECRET = os.getenv('SECRET')
     # SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
     # SQLALCHEMY_DATABASE_URI = "postgresql://localhost/challenge_3_api"
-    SQLALCHEMY_DATABASE_URI = os.environ['HEROKU_POSTGRESQL_PURPLE_URL']
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 
 
 
