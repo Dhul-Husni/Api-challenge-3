@@ -40,7 +40,7 @@ def create_app(config_name):
             "http",
             "https"
         ],
-        "host": "http://api-recipe-challenge.herokuapp.com",
+        "host": "www.api-recipe-challenge.herokuapp.com",
         "tags": [
             {
                 "name": "auth",
