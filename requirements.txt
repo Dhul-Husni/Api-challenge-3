@@ -5,3 +5,4 @@ flask-script
 psycopg2
 PyJWT
 flasgger
+flask-heroku

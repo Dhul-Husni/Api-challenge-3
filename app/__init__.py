@@ -5,6 +5,7 @@ from instance.config import app_config
 from flask import redirect
 from flasgger import Swagger
 from flasgger import swag_from
+from flask_heroku import Heroku
 # initialize SQLAlchemy
 db = SQLAlchemy()
 
@@ -57,6 +58,7 @@ def create_app(config_name):
         ]
     }
     Swagger(app)  # This creates a swagger ui documentation
+    Heroku(app)
     # The views for the application
 
     @app.route('/')
