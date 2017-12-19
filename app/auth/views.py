@@ -11,17 +11,17 @@ class RegistrationView(MethodView):
     @swag_from("docs/Register_user.yml", methods=['POST'])
     def post(self):
         """Handles post requests from this url /auth/register"""
-        user = User.query.filter_by(email=request.data['email']).first()  # returns None if none exist
+        user = User.query.filter_by(email=request.data['email'].strip()).first()  # returns None if none exist
         if not user:
             # Register the user
             try:
-                email = request.data.get('email', '')
+                email = request.data.get('email', '').strip()
                 password = request.data.get('password', '')
-                first_name = request.data.get('First Name', '')
-                last_name = request.data.get('Last Name', '')
+                first_name = request.data.get('First Name', '').strip()
+                last_name = request.data.get('Last Name', '').strip()
                 if first_name and last_name and email and password:
                     if re.match(r'^[a-zA-z0-9_+.]+@[a-zA-z-]+\.[a-zA-z-]+$', email): # validate email
-                        if password >= 8:  # validate password
+                        if len(password) >= 8:  # validate password
                             user = User(email=email, password=password, first_name=first_name, last_name=last_name)
                             user.save()
                             response = {'Message': 'You have successfully registered'}

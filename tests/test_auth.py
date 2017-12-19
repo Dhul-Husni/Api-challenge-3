@@ -28,6 +28,30 @@ class AuthTestCase(unittest.TestCase):
         self.assertEqual(result['Message'], 'You have successfully registered')
         self.assertEqual(res.status_code, 201)
 
+    def test_invalid_email_registration(self):
+        """Makes a post request to the api with invalid email and tests if user
+        will be registered"""
+        res = self.client().post('/api-1.0/auth/register', data={'First Name': 'Kali',
+                                                                 'Last Name': 'Sir3n',
+                                                                 'email': 'test@..com',
+                                                                 'password': 'Kali2018'
+                                                                 })
+        # get the result in json format
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['Message'], 'Please provide a valid email')
+
+    def test_invalid_password_provided(self):
+        """Makes a post request to the api with invalid password and tests if user
+        will be registered"""
+        res = self.client().post('/api-1.0/auth/register', data={'First Name': 'Kali',
+                                                                 'Last Name': 'Sir3n',
+                                                                 'email': 'test@example.com',
+                                                                 'password': 'Kali2'
+                                                                 })
+        # get the result in json format
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['Message'], 'Password must be greater than 8')
+
     def test_already_registered(self):
         """Test if user is already registerd"""
         res = self.client().post('/api-1.0/auth/register', data=self.user_data)
