@@ -5,9 +5,14 @@ class Config:
     DEBUG = False
     CSRF_ENABLED = True
     SECRET = os.getenv('SECRET')
+    # local db
     # SQLALCHEMY_DATABASE_URI = "postgresql://postgres:kali2018@localhost/challenge_3_api"
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    
+    #  Travis db
+    SQLALCHEMY_DATABASE_URI = "postgresql://localhost/challenge_3_api"
 
+    # Heroku live db
+    # SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 
 
 class DevelopmentConfig(Config):
@@ -16,6 +21,7 @@ class DevelopmentConfig(Config):
     DEBUG = False
     TESTING = False
 
+
 class TestingConfig(Config):
     """configuration for testing with a separate testing database
     """
@@ -23,14 +29,18 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/test_db'
     DEBUG = True
 
+
 class StagingConfig(Config):
     """config for staging
     """
+
+
 class ProductionConfig(Config):
     """ config for production
     """
     DEBUG = False
     TESTING = False
+
 
 app_config = {
     'development': DevelopmentConfig,
