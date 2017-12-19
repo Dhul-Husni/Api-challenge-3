@@ -5,7 +5,7 @@ from app.models import User
 from werkzeug.security import check_password_hash
 from app.models import RevokeToken
 from flasgger import swag_from
-
+import re
 class RegistrationView(MethodView):
     """This class handles user registration"""
     @swag_from("docs/Register_user.yml", methods=['POST'])
@@ -20,12 +20,18 @@ class RegistrationView(MethodView):
                 first_name = request.data.get('First Name', '')
                 last_name = request.data.get('Last Name', '')
                 if first_name and last_name and email and password:
-                    user = User(email=email, password=password, first_name=first_name, last_name=last_name)
-                    user.save()
-                    response = {'Message': 'You have successfully registered'}
+                    if re.match(r'^[a-zA-z0-9_+.]+@[a-zA-z-]+\.[a-zA-z-]+$', email): # validate email
+                        if password >= 8:  # validate password
+                            user = User(email=email, password=password, first_name=first_name, last_name=last_name)
+                            user.save()
+                            response = {'Message': 'You have successfully registered'}
+                        else:
+                            response = {'Message': 'Password must be greater than 8'}
+                    else:
+                        response = {'Message': 'Please provide a valid email'}
                     return make_response(jsonify(response)), 201
                 else:
-                    response = {"Message": "Please fillout First Name, Last Name, email and password"}
+                    response = {"Message": "Please fill out First Name, Last Name, email and password"}
                     return make_response(jsonify(response)), 203
             except Exception as e:
                 # if error occured returns the error as a message
