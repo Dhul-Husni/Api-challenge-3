@@ -26,6 +26,12 @@ parameters:
     in: query
     name: "per_page"
     type: integer
+-   name: "id"
+    in: "path"
+    description: "ID of Category to return"
+    required: true
+    type: "integer"
+    format: "int64"
 
 -   description: "Details needed during adding a recipe inside a category"
     in: "body"
