@@ -16,15 +16,20 @@ parameters:
     description: "The users access token is passed in for authorization     as 'Bearer <user_token>'"
     required: true
     type: string
-
--   description: "The page to be outputted (Results are paginated)"
+-   name: "page"
     in: query
-    name: "page"
     type: integer
--   description: "Number of results per page (default is 20)"
+    description: "The page to be outputted (Results are paginated)"
+-   name: "per_page"
     in: query
-    name: "per_page"
     type: integer
+    description: "Number of results per page (default is 20)"
+-   name: "id"
+    in: "path"
+    description: "ID of Category to return"
+    required: true
+    type: "integer"
+    format: "int64"
 responses:
   200:
     description: |
