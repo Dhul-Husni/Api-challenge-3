@@ -102,10 +102,22 @@ class ApiTestCase(unittest.TestCase):
                                                                      "name": "Sweet pie",
                                                                      "detail": "Made by mama"
                                                                      },
-                                 headers=dict(Authorization="Bearer " + access_token)
+                                 headers=dict(Authorization=access_token)
                                  )
         self.assertEqual(res.status_code, 201)
         self.assertIn('Sweet pie', str(res.data))
+
+    def test_get_categories_when_empty(self):
+        """Tests when a get all request is made and all categories are empty"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        self.assertEqual(res.status_code, 201)
+        result = self.client().get('/api-1.0/categories',
+                                   headers=dict(Authorization=access_token)
+                                   )
+        self.assertEqual(result.status_code, 200)
+        self.assertIn("Nothing here yet", str(result.data))
 
     def test_users_can_get_all_categories(self):
         """Test if Api can get All categories"""
@@ -116,14 +128,37 @@ class ApiTestCase(unittest.TestCase):
                                                                 "name": "Sweet pie",
                                                                 "detail": "Made by mama"
                                                                 },
-                                 headers=dict(Authorization="Bearer " + access_token)
+                                 headers=dict(Authorization=access_token)
                                  )
         self.assertEqual(res.status_code, 201)
         result = self.client().get('/api-1.0/categories',
-                                   headers=dict(Authorization="Bearer " + access_token)
+                                   headers=dict(Authorization=access_token)
                                    )
         self.assertEqual(result.status_code, 200)
         self.assertIn("Made by mama", str(result.data))
+
+    def test_user_cannot_post_duplicate_entries(self):
+        """When user creates two similar categories"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        res = self.client().post('/api-1.0/categories', data={
+            "name": "Sweet pie",
+            "detail": "Made by mama"
+        },
+                                 headers=dict(Authorization=access_token)
+                                 )
+        self.assertEqual(res.status_code, 201)
+        self.assertIn('Sweet pie', str(res.data))
+        # create duplicate entries
+        res = self.client().post('/api-1.0/categories', data={
+            "name": "Sweet pie",
+            "detail": "Made by mama"
+        },
+                                 headers=dict(Authorization=access_token)
+                                 )
+        self.assertEqual(res.status_code, 409)
+        self.assertIn('Category already exists', str(res.data))
 
     def test_users_can_get_category_by_id(self):
         """Test if Api can get category by id"""
@@ -134,12 +169,12 @@ class ApiTestCase(unittest.TestCase):
                                                                 "name": "Sweet pie",
                                                                 "detail": "Made by mama"
                                                                 },
-                                 headers=dict(Authorization="Bearer " + access_token)
+                                 headers=dict(Authorization=access_token)
                                  )
         self.assertEqual(res.status_code, 201)
         result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
         result = self.client().get('/api-1.0/categories/{}'.format(result_in_json['id']),
-                                   headers=dict(Authorization="Bearer " + access_token)
+                                   headers=dict(Authorization=access_token)
                                    )
         self.assertEqual(result.status_code, 200)
         self.assertIn('Sweet pie', str(result.data))
@@ -153,18 +188,18 @@ class ApiTestCase(unittest.TestCase):
                                                                 "name": "Sweet pie",
                                                                 "detail": "Made by mama"
                                                                 },
-                                 headers=dict(Authorization="Bearer " + access_token)
+                                 headers=dict(Authorization=access_token)
                                  )
         self.assertEqual(res.status_code, 201)
         res = self.client().put('/api-1.0/categories/1', data={
                                                                        "name": "Bitter pie",
                                                                        "detail": "Made by me"
                                                                        },
-                                headers=dict(Authorization="Bearer " + access_token)
+                                headers=dict(Authorization=access_token)
                                 )
         self.assertEqual(res.status_code, 200)
         result = self.client().get('/api-1.0/categories/1',
-                                   headers=dict(Authorization="Bearer " + access_token)
+                                   headers=dict(Authorization=access_token)
                                    )
         self.assertEqual(res.status_code, 200)
         self.assertIn('Bitter pie', str(result.data))
@@ -178,15 +213,15 @@ class ApiTestCase(unittest.TestCase):
                                                                 "name": "Sweet pie",
                                                                 "detail": "Made by mama"
                                                                },
-                                 headers=dict(Authorization="Bearer " + access_token)
+                                 headers=dict(Authorization=access_token)
                                  )
         self.assertEqual(res.status_code, 201)
         result = self.client().delete('/api-1.0/categories/1',
-                                      headers=dict(Authorization="Bearer " + access_token),
+                                      headers=dict(Authorization=access_token),
                                       )
         self.assertEqual(result.status_code, 200)
         res = self.client().get('/api-1.0/categories/1',
-                                headers=dict(Authorization="Bearer " + access_token)
+                                headers=dict(Authorization=access_token)
                                 )
         self.assertEqual(res.status_code, 404)
 
@@ -199,14 +234,14 @@ class ApiTestCase(unittest.TestCase):
                                                                 "name": "Sweet pie",
                                                                 "detail": "Made by mama"
                                                                 },
-                                 headers=dict(Authorization="Bearer " + access_token)
+                                 headers=dict(Authorization=access_token)
                                  )
         self.assertIn("Sweet pie", str(res.data))
         result = self.client().post('/api-1.0/categories/1/recipes', data={
                                                                                    "name": "Grandma home made",
                                                                                    "recipe": "1 tea spoon sugar"
                                                                                     },
-                                    headers=dict(Authorization="Bearer " + access_token)
+                                    headers=dict(Authorization=access_token)
                                     )
         self.assertEqual(res.status_code, 201)
         self.assertIn('tea spoon', str(result.data))
@@ -220,25 +255,25 @@ class ApiTestCase(unittest.TestCase):
                                                                 "name": "Sweet pie",
                                                                 "detail": "Made by mama"
                                                                 },
-                                 headers=dict(Authorization="Bearer " + access_token)
+                                 headers=dict(Authorization=access_token)
                                  )
         self.assertEqual(res.status_code, 201)
         result = self.client().post('/api-1.0/categories/1/recipes', data={
                                                                                     "name": "Grandma's home made",
                                                                                     "recipe": "1 tea spoon sugar"
                                                                                     },
-                                    headers=dict(Authorization="Bearer " + access_token)
+                                    headers=dict(Authorization=access_token)
                                     )
         self.assertEqual(result.status_code, 201)
         result = self.client().put('/api-1.0/categories/1/recipes/1', data={
                                                                                     "name": "Uncle's homemade",
                                                                                     "recipe": "1 bowl of onions"
                                                                                     },
-                                   headers=dict(Authorization="Bearer " + access_token)
+                                   headers=dict(Authorization=access_token)
                                    )
         self.assertEqual(result.status_code, 201)
         final = self.client().get('/api-1.0/categories/1/recipes/1',
-                                  headers=dict(Authorization="Bearer " + access_token)
+                                  headers=dict(Authorization=access_token)
                                   )
         self.assertEqual(final.status_code, 200)
         self.assertIn('bowl of', str(final.data))
@@ -252,24 +287,24 @@ class ApiTestCase(unittest.TestCase):
                                                                 "name": "Sweet pie",
                                                                 "detail": "Made by mama"
                                                                },
-                           headers=dict(Authorization="Bearer " + access_token)
+                           headers=dict(Authorization=access_token)
                            )
 
         self.client().post('/api-1.0/categories', data={
                                                         "name": "Sour pie",
                                                         "detail": "Made by brother"
                                                         },
-                           headers=dict(Authorization="Bearer " + access_token)
+                           headers=dict(Authorization=access_token)
                            )
         self.client().post('/api-1.0/categories', data={
                                                         "name": "chicken",
                                                         "detail": "Made by brother"
                                                         },
-                           headers=dict(Authorization="Bearer " + access_token)
+                           headers=dict(Authorization=access_token)
                            )
 
         search_result = self.client().get('/api-1.0/categories/search?q=chicken',
-                                          headers=dict(Authorization="Bearer " + access_token)
+                                          headers=dict(Authorization=access_token)
                                           )
         self.assertIn("Made by brother", str(search_result.data))
         self.assertEqual(search_result.status_code, 200)
