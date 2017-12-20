@@ -112,7 +112,6 @@ class ApiTestCase(unittest.TestCase):
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
-        self.assertEqual(res.status_code, 201)
         result = self.client().get('/api-1.0/categories',
                                    headers=dict(Authorization=access_token)
                                    )
@@ -135,7 +134,7 @@ class ApiTestCase(unittest.TestCase):
                                    headers=dict(Authorization=access_token)
                                    )
         self.assertEqual(result.status_code, 200)
-        self.assertIn("Made by mama",title(), str(result.data))
+        self.assertIn("Made by mama".title(), str(result.data))
 
     def test_user_cannot_post_duplicate_entries(self):
         """When user creates two similar categories"""
