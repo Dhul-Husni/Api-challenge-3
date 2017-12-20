@@ -287,12 +287,22 @@ def create_app(config_name):
                                         "Date Modified": recipe.date_modified
                                     }
                                 result.append(obj)
-                            response = jsonify({'Next Page': recipe_object.next_num,
-                                                'Prev Page': recipe_object.prev_num,
-                                                'Has next': recipe_object.has_next,
-                                                'Has previous': recipe_object.has_prev}, result)
-                            response.status_code = 200
-                            return response
+                            if not result:
+                                response = jsonify({'Next Page': recipe_object.next_num,
+                                                    'Prev Page': recipe_object.prev_num,
+                                                    'Has next': recipe_object.has_next,
+                                                    'Has previous': recipe_object.has_prev},
+                                                   {"Message": "Nothing here yet"})
+                                response.status_code = 200
+                                return response
+                            else:
+                                response = jsonify({'Next Page': recipe_object.next_num,
+                                                    'Prev Page': recipe_object.prev_num,
+                                                    'Has next': recipe_object.has_next,
+                                                    'Has previous': recipe_object.has_prev}, result)
+                                response.status_code = 200
+                                return response
+
                         else:
                             response = jsonify({"Message": "No recipes added yet"})
                             response.status_code = 404
