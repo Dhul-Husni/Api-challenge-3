@@ -105,7 +105,7 @@ class ApiTestCase(unittest.TestCase):
                                  headers=dict(Authorization=access_token)
                                  )
         self.assertEqual(res.status_code, 201)
-        self.assertIn('Sweet pie', str(res.data))
+        self.assertIn('Sweet pie'.title(), str(res.data))
 
     def test_get_categories_when_empty(self):
         """Tests when a get all request is made and all categories are empty"""
@@ -135,7 +135,7 @@ class ApiTestCase(unittest.TestCase):
                                    headers=dict(Authorization=access_token)
                                    )
         self.assertEqual(result.status_code, 200)
-        self.assertIn("Made by mama", str(result.data))
+        self.assertIn("Made by mama",title(), str(result.data))
 
     def test_user_cannot_post_duplicate_entries(self):
         """When user creates two similar categories"""
@@ -149,7 +149,7 @@ class ApiTestCase(unittest.TestCase):
                                  headers=dict(Authorization=access_token)
                                  )
         self.assertEqual(res.status_code, 201)
-        self.assertIn('Sweet pie', str(res.data))
+        self.assertIn('Sweet pie'.title(), str(res.data))
         # create duplicate entries
         res = self.client().post('/api-1.0/categories', data={
             "name": "Sweet pie",
@@ -177,7 +177,7 @@ class ApiTestCase(unittest.TestCase):
                                    headers=dict(Authorization=access_token)
                                    )
         self.assertEqual(result.status_code, 200)
-        self.assertIn('Sweet pie', str(result.data))
+        self.assertIn('Sweet pie'.title(), str(result.data))
 
     def test_users_categories_can_be_edited(self):
         """Test if Api can edit user categories(Put)"""
@@ -202,7 +202,7 @@ class ApiTestCase(unittest.TestCase):
                                    headers=dict(Authorization=access_token)
                                    )
         self.assertEqual(res.status_code, 200)
-        self.assertIn('Bitter pie', str(result.data))
+        self.assertIn('Bitter pie'.title(), str(result.data))
 
     def test_users_categories_can_be_deleted(self):
         """Tests if Api can delete user categories"""
@@ -236,7 +236,7 @@ class ApiTestCase(unittest.TestCase):
                                                                 },
                                  headers=dict(Authorization=access_token)
                                  )
-        self.assertIn("Sweet pie", str(res.data))
+        self.assertIn("Sweet pie".title(), str(res.data))
         result = self.client().post('/api-1.0/categories/1/recipes', data={
                                                                                    "name": "Grandma home made",
                                                                                    "recipe": "1 tea spoon sugar"
@@ -244,7 +244,7 @@ class ApiTestCase(unittest.TestCase):
                                     headers=dict(Authorization=access_token)
                                     )
         self.assertEqual(res.status_code, 201)
-        self.assertIn('tea spoon', str(result.data))
+        self.assertIn('tea spoon'.title(), str(result.data))
 
     def test_user_category_recipe_can_be_edited(self):
         """Tests if api can edit recipes"""
@@ -276,7 +276,7 @@ class ApiTestCase(unittest.TestCase):
                                   headers=dict(Authorization=access_token)
                                   )
         self.assertEqual(final.status_code, 200)
-        self.assertIn('bowl of', str(final.data))
+        self.assertIn('bowl of'.title(), str(final.data))
 
     def test_user_can_search_through_categories_using_get_parameter_q(self):
         """Tests if a user queries a parameter it returns the closest matching category"""
@@ -306,7 +306,7 @@ class ApiTestCase(unittest.TestCase):
         search_result = self.client().get('/api-1.0/categories/search?q=chicken',
                                           headers=dict(Authorization=access_token)
                                           )
-        self.assertIn("Made by brother", str(search_result.data))
+        self.assertIn("Made by brother".title(), str(search_result.data))
         self.assertEqual(search_result.status_code, 200)
 
     def tearDown(self):
