@@ -100,7 +100,7 @@ def create_app(config_name):
                             response.status_code = 201
                             return response
                         else:
-                            response = {'Message': 'Category already exists'}
+                            response = jsonify({'Message': 'Category already exists'})
                             response.status_code = 409
                             return response
                     else:
