@@ -78,7 +78,7 @@ class RecipeCategory(db.Model):
     """
     __tablename__ = 'categories'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False, unique=True)
+    name = db.Column(db.String(80), nullable=False)
     detail = db.Column(db.String(100))
     created_by = db.Column(db.Integer, db.ForeignKey(User.id))
     recipes = db.relationship('Recipes', backref='belonging_to', cascade="all, delete-orphan", lazy='dynamic')

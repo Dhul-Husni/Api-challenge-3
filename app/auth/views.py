@@ -84,7 +84,7 @@ class LogoutView(MethodView):
         # Get the access token from the header
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            access_token = auth_header.split(" ")[1]
+            access_token = auth_header
         else:
             return {"Message": "Please Provide an access token"}, 300
         if access_token:
@@ -101,7 +101,7 @@ class ResetPasswordView(MethodView):
         # Get the access token from the header
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            access_token = auth_header.split(" ")[1]
+            access_token = auth_header
         else:
             return {"Message": "Please Provide an access token"}, 300
         if access_token:

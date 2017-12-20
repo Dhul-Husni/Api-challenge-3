@@ -71,7 +71,7 @@ def create_app(config_name):
         # Get the access token from the header
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            access_token = auth_header.split(" ")[1]
+            access_token = auth_header
         else:
             return {"Message": "Please Provide an access token"}, 300
         if access_token:
@@ -82,20 +82,27 @@ def create_app(config_name):
                 per_page = int(request.args.get('per_page', 20))
                 #  Go ahead and process the request
                 if request.method == 'POST':
-                    name = str(request.data.get('name', ''))
-                    detail = str(request.data.get('detail', ''))
+                    name = str(request.data.get('name', '')).strip().lower()
+                    detail = str(request.data.get('detail', '')).strip().lower()
                     if name and detail:
-                        category = RecipeCategory(name=name, detail=detail, created_by=user_id)
-                        category.save()
-                        response = jsonify({
-                                            "id": category.id,
-                                            "Recipe Category Name": category.name,
-                                            "Recipe Category Detail": category.detail,
-                                            "Date Created": category.date_created,
-                                            "Date Modified": category.date_modified
-                                            })
-                        response.status_code = 201
-                        return response
+                        # checks if the category posted already exists with the user
+                        check_category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(name=name).first()
+                        if not check_category:
+                            category = RecipeCategory(name=name, detail=detail, created_by=user_id)
+                            category.save()
+                            response = jsonify({
+                                                "id": category.id,
+                                                "Recipe Category Name": category.name.title(),
+                                                "Recipe Category Detail": category.detail.title(),
+                                                "Date Created": category.date_created,
+                                                "Date Modified": category.date_modified
+                                                })
+                            response.status_code = 201
+                            return response
+                        else:
+                            response = jsonify({'Message': 'Category already exists'})
+                            response.status_code = 409
+                            return response
                     else:
                         response = jsonify({"Message": "please use keys name and detail"})
                         response.status_code = 203
@@ -107,8 +114,8 @@ def create_app(config_name):
                     for each_category in category.items:
                         obj = {
                             "id": each_category.id,
-                            "Recipe Category Name": each_category.name,
-                            "Recipe Category Detail": each_category.detail,
+                            "Recipe Category Name": each_category.name.title(),
+                            "Recipe Category Detail": each_category.detail.title(),
                             "Date Created":  each_category.date_created,
                             "Date Modified": each_category.date_modified
                             }
@@ -118,6 +125,12 @@ def create_app(config_name):
                                         'Has next': category.has_next,
                                         'Has prev': category.has_prev,
                                         }, result)
+                    if not result:  # if the result is empty
+                        response = jsonify({'Next page': category.next_num,
+                                            'Prev page': category.prev_num,
+                                            'Has next': category.has_next,
+                                            'Has prev': category.has_prev,
+                                            }, {'Message': 'Nothing here yet'})
                     response.status_code = 200
                     return response
             else:
@@ -134,14 +147,14 @@ def create_app(config_name):
     def categories_manipulation(id):
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            access_token = auth_header.split(" ")[1]
+            access_token = auth_header
         else:
             return {"Message": "Please provide an access token"}, 300
         # retrieve a category by it's id
         if access_token:
             user_id = User.decode_token(access_token)
-            category = RecipeCategory.query.filter_by(id=id).first()
             if not isinstance(user_id, str):
+                category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=id).first()
                 if category:
                     if request.method == 'DELETE':
                         category.delete()
@@ -151,16 +164,16 @@ def create_app(config_name):
                         }, 200
 
                     elif request.method == 'PUT':
-                        name = str(request.data.get('name', ''))
-                        detail = str(request.data.get('detail', ''))
+                        name = str(request.data.get('name', '')).strip().lower()
+                        detail = str(request.data.get('detail', '')).strip().lower()
                         if name and detail:
                             category.name = name
                             category.detail = detail
                             category.save()
                             response = jsonify({
                                                 "id": category.id,
-                                                "Recipe Category Name": category.name,
-                                                "Recipe Category Detail": category.detail,
+                                                "Recipe Category Name": category.name.title(),
+                                                "Recipe Category Detail": category.detail.title(),
                                                 "Date Created": category.date_created,
                                                 "Date Modified": category.date_modified
 
@@ -175,8 +188,8 @@ def create_app(config_name):
                     else:
                         response = jsonify({
                                             "id": category.id,
-                                            "Recipe Category Name": category.name,
-                                            "Recipe Category Detail": category.detail,
+                                            "Recipe Category Name": category.name.title(),
+                                            "Recipe Category Detail": category.detail.title(),
                                             "Date Created": category.date_created,
                                             "Date Modified": category.date_modified
                                             })
@@ -199,7 +212,7 @@ def create_app(config_name):
         parameter q"""
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            access_token = auth_header.split(" ")[1]
+            access_token = auth_header
         else:
             return {"Message": "Please provide an access token"}, 300
         if access_token:
@@ -207,7 +220,7 @@ def create_app(config_name):
             if not isinstance(user_id, str):
                 page = int(request.args.get('page', 1))
                 per_page = int(request.args.get('per_page', 20))
-                q = request.values.get('q', '')
+                q = request.values.get('q', '').strip().lower()
                 if q:
                     search_result = RecipeCategory.query.filter_by(created_by=user_id).paginate(page=page, per_page=per_page)
                     # GET
@@ -216,8 +229,8 @@ def create_app(config_name):
                         if q in each_category.name or q in each_category.detail:
                             obj = {
                                 "id": each_category.id,
-                                "Recipe Category Name": each_category.name,
-                                "Recipe Category Detail": each_category.detail,
+                                "Recipe Category Name": each_category.name.title(),
+                                "Recipe Category Detail": each_category.detail.title(),
                                 "Date Created": each_category.date_created,
                                 "Date Modified": each_category.date_modified
                             }
@@ -251,14 +264,14 @@ def create_app(config_name):
     def recipes(id):
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            access_token = auth_header.split(" ")[1]
+            access_token = auth_header
         else:
             return {"Message": "Please provide an access token"}, 300
-        category = RecipeCategory.query.filter_by(id=id).first()
         result = []
         if access_token:
             user_id = User.decode_token(access_token)
             if not isinstance(user_id, str):
+                category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=id).first()
                 page = int(request.args.get('page', 1))
                 per_page = int(request.args.get('per_page', 20))
                 if category:
@@ -268,8 +281,8 @@ def create_app(config_name):
                             for recipe in recipe_object.items:
                                 obj = {
                                         "id": recipe.id,
-                                        "name": recipe.name,
-                                        "Recipe": recipe.recipe,
+                                        "name": recipe.name.title(),
+                                        "Recipe": recipe.recipe.title(),
                                         "Date Created": recipe.date_created,
                                         "Date Modified": recipe.date_modified
                                     }
@@ -286,16 +299,16 @@ def create_app(config_name):
                             return response
 
                     elif request.method == 'POST':
-                        name = request.data.get('name', '')
-                        recipe = request.data.get('recipe', '')
+                        name = request.data.get('name', '').strip().lower()
+                        recipe = request.data.get('recipe', '').strip().lower()
                         if name and recipe:
                             the_recipes = Recipes(name=name, recipe=recipe, belonging_to=category)
                             the_recipes.save()
                             for recipe in category.recipes.all():
                                 obj = {
                                         "id": recipe.id,
-                                        "name": recipe.name,
-                                        "Recipe": recipe.recipe,
+                                        "name": recipe.name.title(),
+                                        "Recipe": recipe.recipe.title(),
                                         "Date created": recipe.date_created,
                                         "Date modified": recipe.date_modified
                                         }
@@ -314,6 +327,7 @@ def create_app(config_name):
                 response = jsonify({"Message": message})
                 response.status_code = 401
                 return response
+
     @swag_from('docs/Recipes_search_get.yml', methods=['GET'])
     @app.route('/api-1.0/categories/<int:id>/recipes/search', methods=['GET'])
     def search_recipe_item(id):
@@ -321,18 +335,18 @@ def create_app(config_name):
         parameter q"""
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            access_token = auth_header.split(" ")[1]
+            access_token = auth_header
         else:
             return {"Message": "Please provide an access token"}, 300
         if access_token:
             user_id = User.decode_token(access_token)
-            category = RecipeCategory.query.filter_by(id=id).first()
+            category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=id).first()
             if not isinstance(user_id, str):
                 page = int(request.args.get('page', 1))
                 per_page = int(request.args.get('per_page', 20))
                 if category:
                     if category.recipes:
-                        q = request.values.get('q', '')
+                        q = request.values.get('q', '').strip().lower()
                         if q:
                             search_result = category.recipes.paginate(page=page, per_page=per_page)
                             # GET
@@ -341,8 +355,8 @@ def create_app(config_name):
                                 if q in each_recipe.name or q in each_recipe.recipe:
                                     obj = {
                                         "id": each_recipe.id,
-                                        "Name": each_recipe.name,
-                                        "Recipe": each_recipe.recipe,
+                                        "Name": each_recipe.name.title(),
+                                        "Recipe": each_recipe.recipe.title(),
                                         "Date Created": each_recipe.date_created,
                                         "Date Modified": each_recipe.date_modified
                                     }
@@ -371,6 +385,7 @@ def create_app(config_name):
                 response = jsonify({"Message": message})
                 response.status_code = 401
                 return response
+
     @swag_from('docs/Recipe_id_get.yml', methods=['GET'])
     @swag_from('docs/Recipes_id_edit.yml', methods=['PUT'])
     @swag_from('docs/Recipes_id_delete.yml', methods=['DELETE'])
@@ -378,13 +393,13 @@ def create_app(config_name):
     def recipe_manipulation(val, res):
         auth_header = request.headers.get('Authorization')
         if auth_header:
-            access_token = auth_header.split(" ")[1]
+            access_token = auth_header
         else:
             return {"Message": "Please provide and access token"}, 300
-        category = RecipeCategory.query.filter_by(id=val).first()
         if access_token:
             user_id = User.decode_token(access_token)
             if not isinstance(user_id, str):
+                category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=val).first()
                 if category:
                     current_recipe = category.recipes.filter_by(id=res).all()  # Access the recipe related to the category
                     if current_recipe:
@@ -397,16 +412,16 @@ def create_app(config_name):
                                 }, 200
 
                         elif request.method == 'PUT':
-                            name = request.data.get('name', '')
-                            recipe = request.data.get('recipe', '')
+                            name = request.data.get('name', '').strip().lower()
+                            recipe = request.data.get('recipe', '').strip().lower()
                             if name and recipe:
                                 for the_recipe in current_recipe:
                                     the_recipe.name = name
                                     the_recipe.recipe = recipe
                                     the_recipe.save()
                                     response = jsonify({
-                                                    "Recipe Name": the_recipe.name,
-                                                    "Recipe": the_recipe.recipe,
+                                                    "Recipe Name": the_recipe.name.title(),
+                                                    "Recipe": the_recipe.recipe.title(),
                                                     "Date Created": the_recipe.date_created,
                                                     "Date Modified": the_recipe.date_modified,
                                                     })
@@ -418,8 +433,8 @@ def create_app(config_name):
                         elif request.method == 'GET':
                             for the_recipe in current_recipe:
                                 response = jsonify({
-                                                    "Recipe Name": the_recipe.name,
-                                                    "Recipe": the_recipe.recipe,
+                                                    "Recipe Name": the_recipe.name.title(),
+                                                    "Recipe": the_recipe.recipe.title(),
                                                     "Date Created": the_recipe.date_created,
                                                     "Date Modified": the_recipe.date_modified,
                                                     })
