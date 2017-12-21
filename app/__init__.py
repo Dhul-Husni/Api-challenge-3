@@ -25,8 +25,8 @@ def create_app(config_name):
         "swagger": "2.0",
         "info": {
             "version": "1.0",
-            "title": "Recipe Challenge Api",
-            "description": "A recipe web application api.\n Useful resources include\n'https://github.com/sir3n-sn/Api-challenge-3'\n",
+            "title": "ApiRecipeChallenge",
+            "description": "A recipe Api \n Useful resources include\n'https://github.com/sir3n-sn/Api-challenge-3'\n",
             "contact": {
                 "email": "Thalkifly.hassan@andela.com"
             },
