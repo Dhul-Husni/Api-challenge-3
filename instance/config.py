@@ -6,10 +6,10 @@ class Config:
     CSRF_ENABLED = True
     SECRET = os.getenv('SECRET')
     # local db
-    # SQLALCHEMY_DATABASE_URI = "postgresql://postgres:kali2018@localhost/challenge_3_api"
+    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:kali2018@localhost/challenge_3_api"
     
     #  Travis db
-    SQLALCHEMY_DATABASE_URI = "postgresql://localhost/challenge_3_api"
+    # SQLALCHEMY_DATABASE_URI = "postgresql://localhost/challenge_3_api"
 
     # Heroku live db
     # SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']

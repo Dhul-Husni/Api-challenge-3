@@ -24,13 +24,13 @@ def create_app(config_name):
     app.config['SWAGGER'] = {
         "swagger": "2.0",
         "info": {
-            "version": "1.0",
-            "title": "Api Recipe Challenge",
-            "description": "A recipe Api. \n Useful resources include\n'https://github.com/sir3n-sn/Api-challenge-3'\n",
-            "contact": {
-                "email": "Thalkifly.hassan@andela.com"
-            },
+            "description": "Andela Api Challenge",
             "termsOfService": "https://opensource.org/ToS",
+            "title": "Recipes API",
+            "version": "0.0.1",
+            "contact": {
+                "email": "Thalkifly.hassan@andela.com",
+            },
             "license": {
                 "name": "Apache 2.0",
                 "url": "http://www.apache.org/licenses/LICENSE-2.0.html"

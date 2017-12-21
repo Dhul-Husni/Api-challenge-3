@@ -2,20 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="34ff0c8b-5b9a-466a-a52b-e661cbb2d738" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/app/auth/docs/Reset_password.yml" afterPath="$PROJECT_DIR$/app/auth/docs/Reset_password.yml" />
-      <change beforePath="$PROJECT_DIR$/app/auth/docs/logout.yml" afterPath="$PROJECT_DIR$/app/auth/docs/logout.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Categories_get.yml" afterPath="$PROJECT_DIR$/app/docs/Categories_get.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Categories_id_delete.yml" afterPath="$PROJECT_DIR$/app/docs/Categories_id_delete.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Categories_id_edit.yml" afterPath="$PROJECT_DIR$/app/docs/Categories_id_edit.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Categories_post.yml" afterPath="$PROJECT_DIR$/app/docs/Categories_post.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Categories_search_get.yml" afterPath="$PROJECT_DIR$/app/docs/Categories_search_get.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Category_id_get.yml" afterPath="$PROJECT_DIR$/app/docs/Category_id_get.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Recipe_id_get.yml" afterPath="$PROJECT_DIR$/app/docs/Recipe_id_get.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Recipes_get.yml" afterPath="$PROJECT_DIR$/app/docs/Recipes_get.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Recipes_id_delete.yml" afterPath="$PROJECT_DIR$/app/docs/Recipes_id_delete.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Recipes_id_edit.yml" afterPath="$PROJECT_DIR$/app/docs/Recipes_id_edit.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Recipes_post.yml" afterPath="$PROJECT_DIR$/app/docs/Recipes_post.yml" />
-      <change beforePath="$PROJECT_DIR$/app/docs/Recipes_search_get.yml" afterPath="$PROJECT_DIR$/app/docs/Recipes_search_get.yml" />
       <change beforePath="$PROJECT_DIR$/instance/config.py" afterPath="$PROJECT_DIR$/instance/config.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,11 +13,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="630">
+              <caret line="49" column="10" lean-forward="true" selection-start-line="49" selection-start-column="10" selection-end-line="49" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="config.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/instance/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="4" lean-forward="false" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
+            <state relative-caret-position="120">
+              <caret line="8" column="4" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -59,7 +55,6 @@
         <option value="$PROJECT_DIR$/app/models.py" />
         <option value="$PROJECT_DIR$/app/auth/views.py" />
         <option value="$PROJECT_DIR$/tests/test_api_challenge3.py" />
-        <option value="$PROJECT_DIR$/app/__init__.py" />
         <option value="$PROJECT_DIR$/app/docs/Categories_get.yml" />
         <option value="$PROJECT_DIR$/app/docs/Categories_id_delete.yml" />
         <option value="$PROJECT_DIR$/app/docs/Categories_id_edit.yml" />
@@ -74,6 +69,7 @@
         <option value="$PROJECT_DIR$/app/docs/Recipes_search_get.yml" />
         <option value="$PROJECT_DIR$/app/auth/docs/Reset_password.yml" />
         <option value="$PROJECT_DIR$/app/auth/docs/logout.yml" />
+        <option value="$PROJECT_DIR$/app/__init__.py" />
         <option value="$PROJECT_DIR$/instance/config.py" />
       </list>
     </option>
@@ -251,9 +247,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1386">
           <caret line="84" column="57" lean-forward="false" selection-start-line="84" selection-start-column="57" selection-end-line="84" selection-end-column="57" />
-          <folding>
-            <element signature="e#0#30#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -311,9 +305,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#30#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -445,16 +437,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="49" column="10" lean-forward="false" selection-start-line="49" selection-start-column="10" selection-end-line="49" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#30#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/docs/Categories_get.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="134">
@@ -567,10 +549,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="49" column="10" lean-forward="true" selection-start-line="49" selection-start-column="10" selection-end-line="49" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/instance/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="4" lean-forward="false" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
+        <state relative-caret-position="120">
+          <caret line="8" column="4" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
           <folding />
         </state>
       </provider>
