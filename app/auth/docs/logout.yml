@@ -10,12 +10,8 @@ consumes:
   - "application/json"
 produces:
 - "application/json"
-parameters:
-  - description: "The user token to be blacklisted is passed in as 'Bearer <user_token>'"
-    in: "header"
-    name: "Authorization"
-    required: true
-    type: string
+security:
+  - TokenHeader: []
 responses:
   200:
     description: |
