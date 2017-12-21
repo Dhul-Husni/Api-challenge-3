@@ -1,7 +1,6 @@
 # Api-challenge-3
 [![Build Status](https://travis-ci.org/sir3n-sn/Api-challenge-3.svg?branch=master)](https://travis-ci.org/sir3n-sn/Api-challenge-3)
-[![Coverage Status](https://coveralls.io/repos/github/sir3n-sn/Api-challenge-3/badge.svg?branch=development&service=github)](https://coveralls.io/github/sir3n-sn/Api-challenge-3?branch=development)This is a simple Restful api for a recipe app.
-Details on installation and use will be included when the build is completed.  
+[![Coverage Status](https://coveralls.io/repos/github/sir3n-sn/Api-challenge-3/badge.svg?branch=development&service=github)](https://coveralls.io/github/sir3n-sn/Api-challenge-3?branch=development)
 
 **Recipe Api:** version 1.0
 
@@ -119,11 +118,11 @@ def test_user_cannot_post_duplicate_entries(self):
 **Populate and initialize the database**
 *inside the virtualenv run:*
 ```
-python3 manager.py db init
+python3 manage.py db init
 
-python3 manager.py db migrate
+python3 manage.py db migrate
 
-python3 manager.py db upgrade
+python3 manage.py db upgrade
 
 ```
 
@@ -172,6 +171,6 @@ http://127.0.0.1:5000/categories?q=example
 | /api-1.0/auth/categories/{id}/recipes/{id} | DELETE | Deletes a single recipe|TRUE
 
 
-### Testing and API documentation
+### Demo and API documentation
 
 [https://api-recipe-challenge.herokuapp.com/](https://api-recipe-challenge.herokuapp.com/)
