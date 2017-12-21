@@ -25,8 +25,8 @@ def create_app(config_name):
         "swagger": "2.0",
         "info": {
             "version": "1.0",
-            "title": "ApiRecipeChallenge",
-            "description": "A recipe Api \n Useful resources include\n'https://github.com/sir3n-sn/Api-challenge-3'\n",
+            "title": "Api Recipe Challenge",
+            "description": "A recipe Api. \n Useful resources include\n'https://github.com/sir3n-sn/Api-challenge-3'\n",
             "contact": {
                 "email": "Thalkifly.hassan@andela.com"
             },
@@ -41,6 +41,13 @@ def create_app(config_name):
             "https"
         ],
         "host": "api-recipe-challenge.herokuapp.com",
+        "securityDefinitions":{
+            "TokenHeader":{
+                "type":"apiKey",
+                "name":"Authorization",
+                "in":"header"
+            }
+        },
         "tags": [
             {
                 "name": "auth",

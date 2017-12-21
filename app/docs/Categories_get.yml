@@ -68,6 +68,9 @@ parameters:
     type: integer
 produces:
   - application/json
+security:
+  - TokenHeader: []
+  
 responses:
   200:
     description: "\"Recipe categories are successfully returned <OK>\"\n"
