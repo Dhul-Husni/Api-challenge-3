@@ -11,13 +11,9 @@ consumes:
   - "application/json"
 produces:
 - "application/json"
+security:
+  - TokenHeader: []
 parameters:
--   name: "Authorization"
-    in: "header"
-    description: "The users access token is passed in for authorization     as 'Bearer <user_token>'"
-    required: true
-    type: string
-
 -   description: "The page to be outputed (Results are paginated)"
     in: query
     name: "page"

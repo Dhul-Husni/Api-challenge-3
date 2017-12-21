@@ -51,12 +51,6 @@ description: "Functionalities (GET) and responses from the categories endpoint "
 operationId: "Get a user's categories"
 parameters:
   -
-    description: "The users access token is passed in for authorization     as 'Bearer <user_token>'"
-    in: header
-    name: Authorization
-    required: true
-    type: string
-  -
     description: "The page to be outputed (Results are paginated)"
     in: query
     name: page
