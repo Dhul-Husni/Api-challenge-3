@@ -41,6 +41,13 @@ def create_app(config_name):
             "https"
         ],
         "host": "api-recipe-challenge.herokuapp.com",
+        "securityDefinitions":{
+            "TokenHeader":{
+                "type":"apiKey",
+                "name":"Authorization",
+                "in":"header"
+            }
+        },
         "tags": [
             {
                 "name": "auth",
