@@ -77,6 +77,86 @@ class ApiTestCase(unittest.TestCase):
                     'Last Name': last_name
                     }
         return self.client().post('/api-1.0/auth/register', data=user_data)
+    def test_no_access_token_provided_in_category(self):
+        """Tests if a user does not provide an access token to the endpoints"""
+        res = self.client().post('/api-1.0/categories', data={
+            "name": "Sweet pie",
+            "detail": "Made by mama"
+        },)
+        self.assertEqual(res.status_code, 300)
+        self.assertIn('Please Provide an access token', str(res.data))
+
+    def test_no_access_token_provided_in_category_id(self):
+        """Tests if a user does not provide an access token to the endpoints"""
+        res = self.client().get('/api-1.0/categories/1', data={
+            "name": "Sweet pie",
+            "detail": "Made by mama"
+        },)
+        self.assertEqual(res.status_code, 300)
+        self.assertIn('please provide an access token', str(res.data).lower())
+
+    def test_invalid_keys_set_for_category(self):
+        """Test for when user does a post request with invalid keys"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        res = self.client().post('/api-1.0/categories', data={
+            "invalid_category": "Sweet pie",
+            "detail": "Made by mama"
+        },
+                                 headers=dict(Authorization=access_token)
+                                 )
+        self.assertEqual(res.status_code, 203)
+        self.assertIn('please use keys name and detail', str(res.data))
+
+    def test_invalid_keys_for_category_id_put(self):
+        """Test for when user does a put request with invalid keys on category id"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        res = self.client().post('/api-1.0/categories', data={
+            "name": "Sweet pie",
+            "detail": "Made by mama"
+        },
+                                 headers=dict(Authorization=access_token)
+                                 )
+        self.assertEqual(res.status_code, 201)
+        res = self.client().put('/api-1.0/categories/1', data={
+            "invalid name": "Bitter pie",
+            "detail": "Made by me"
+        },
+                                headers=dict(Authorization=access_token)
+                                )
+        self.assertEqual(res.status_code, 203)
+        self.assertIn('please use the keys name and detail', str(res.data).lower())
+    def test_invalid_or_expired_token_in_get_and_post_category(self):
+        """Test expired or invalid token in get and post category"""
+        res = self.client().post('/api-1.0/categories', data={
+            "name": "Sweet pie",
+            "detail": "Made by mama"
+        },
+                                 headers=dict(Authorization='invalid.token')
+                                 )
+        self.assertEqual(res.status_code,401)
+        self.assertIn('invalid' or 'expired', str(res.data).lower())
+    def test_invalid_or_expired_token_in_get_and_put_delete_category(self):
+        """Test expired or invalid token in edit and delete category by id"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        res = self.client().post('/api-1.0/categories', data={
+            "name": "Sweet pie",
+            "detail": "Made by mama"
+        },
+                                 headers=dict(Authorization=access_token)
+                                 )
+        self.assertEqual(res.status_code, 201)
+        result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
+        result = self.client().get('/api-1.0/categories/{}'.format(result_in_json['id']),
+                                   headers=dict(Authorization='Invalid.token')
+                                   )
+        self.assertEqual(result.status_code, 401)
+        self.assertIn('invalid' or 'expired', str(result.data).lower())
 
     def test_token_based_authentication(self):
         """Tests if the user is given a token after login"""
@@ -245,6 +325,93 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
         self.assertIn('tea spoon'.title(), str(result.data))
 
+    def test_user_category_recipe_with_invalid_token(self):
+        """api should not create recipe with invalid email"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        res = self.client().post('/api-1.0/categories', data={
+            "name": "Sweet pie",
+            "detail": "Made by mama"
+        },
+                                 headers=dict(Authorization=access_token)
+                                 )
+        self.assertIn("Sweet pie".title(), str(res.data))
+        res = self.client().post('/api-1.0/categories/1/recipes', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                                },
+                                 headers=dict(Authorization='Invalid.token')
+                                 )
+        self.assertEqual(res.status_code, 401)
+        self.assertIn("invalid" or 'expired', str(res.data).lower())
+    def test_user_category_recipe_can_be_created_with_invalid_keys(self):
+        """Tests if api can create recipes with invalid keys(post)"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        res = self.client().post('/api-1.0/categories', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                                },
+                                 headers=dict(Authorization=access_token)
+                                 )
+        self.assertIn("Sweet pie".title(), str(res.data))
+        result = self.client().post('/api-1.0/categories/1/recipes', data={
+                                                                                   "Invalid name": "Grandma home made",
+                                                                                   "recipe": "1 tea spoon sugar"
+                                                                                    },
+                                    headers=dict(Authorization=access_token)
+                                    )
+        self.assertEqual(result.status_code, 203)
+        self.assertIn('Please use keys name and recipe', str(result.data))
+
+    def test_user_category_recipe_can_get_recipes(self):
+        """Tests if api can get recipes (get)"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        res = self.client().post('/api-1.0/categories', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                                },
+                                 headers=dict(Authorization=access_token)
+                                 )
+        self.assertIn("Sweet pie".title(), str(res.data))
+        result = self.client().post('/api-1.0/categories/1/recipes', data={
+                                                                                   "name": "Grandma home made",
+                                                                                   "recipe": "1 tea spoon sugar"
+                                                                                    },
+                                    headers=dict(Authorization=access_token)
+                                    )
+        self.assertEqual(res.status_code, 201)
+        self.assertIn('tea spoon'.title(), str(result.data))
+        result = self.client().get('/api-1.0/categories/1/recipes',
+                                    headers=dict(Authorization=access_token)
+                                    )
+        self.assertEqual(result.status_code, 200)
+        self.assertIn('tea spoon'.title(), str(result.data))
+
+    def test_user_category_recipe_can_get_recipes_when_empty(self):
+        """Tests if api can get recipes (get)"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        res = self.client().post('/api-1.0/categories', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                                },
+                                 headers=dict(Authorization=access_token)
+                                 )
+
+        self.assertEqual(res.status_code, 201)
+        self.assertIn('Sweet pie'.title(), str(res.data))
+        result = self.client().get('/api-1.0/categories/1/recipes',
+                                    headers=dict(Authorization=access_token)
+                                    )
+        self.assertEqual(result.status_code, 200)
+        self.assertIn('Nothing here yet', str(result.data))
+
     def test_user_category_recipe_can_be_edited(self):
         """Tests if api can edit recipes"""
         self.register_user()
@@ -308,6 +475,234 @@ class ApiTestCase(unittest.TestCase):
         self.assertIn("Made by brother".title(), str(search_result.data))
         self.assertEqual(search_result.status_code, 200)
 
+    def test_user_can_search_through_categories_with_no_token(self):
+        """Tests if a user queries a parameter with no token"""
+        search_result = self.client().get('/api-1.0/categories/search?q=chicken',)
+        self.assertIn("Please provide an access token".lower(), str(search_result.data).lower())
+        self.assertEqual(search_result.status_code, 300)
+
+    def test_user_can_search_through_categories_with_invalid_token(self):
+        """Tests if a user queries a parameter with invalid token"""
+        search_result = self.client().get('/api-1.0/categories/search?q=chicken',
+                                          headers=dict(Authorization='Invalid.token'))
+        self.assertIn("invalid" or "expired", str(search_result.data).lower())
+        self.assertEqual(search_result.status_code, 401)
+
+    def test_user_can_search_through_categories_q_not_found(self):
+        """Tests if a user queries a parameter WITH NONE EXISTING DATA"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        self.client().post('/api-1.0/categories', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                               },
+                           headers=dict(Authorization=access_token)
+                           )
+
+        search_result = self.client().get('/api-1.0/categories/search?q=NONE_EXISTING',
+                                          headers=dict(Authorization=access_token)
+                                          )
+        self.assertIn("Sorry we could not find what you are looking for", str(search_result.data))
+        self.assertEqual(search_result.status_code, 200)
+
+    def test_user_can_search_through_categories_with_q_not_found(self):
+        """Tests if a user does not provide q"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        self.client().post('/api-1.0/categories', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                               },
+                           headers=dict(Authorization=access_token)
+                           )
+
+        search_result = self.client().get('/api-1.0/categories/search',
+                                          headers=dict(Authorization=access_token)
+                                          )
+        self.assertIn("Please provide a search query", str(search_result.data))
+        self.assertEqual(search_result.status_code, 404)
+
+    def test_user_category_recipe_can_be_created_with_no_token(self):
+        """Tests if api can create recipes with no token(post)"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        res = self.client().post('/api-1.0/categories', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                                },
+                                 headers=dict(Authorization=access_token)
+                                 )
+        self.assertIn("Sweet pie".title(), str(res.data))
+        result = self.client().post('/api-1.0/categories/1/recipes', data={
+                                                                                   "name": "Grandma home made",
+                                                                                   "recipe": "1 tea spoon sugar"
+                                                                                    },
+                                    )
+        self.assertEqual(result.status_code, 300)
+        self.assertIn('Please provide an access token', str(result.data))
+
+    def test_user_can_search_through_recipes_using_get_parameter_q(self):
+        """Tests if a user queries a parameter it returns the closest matching recipe"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        self.client().post('/api-1.0/categories', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                               },
+                           headers=dict(Authorization=access_token)
+                           )
+
+        self.client().post('/api-1.0/categories/1/recipes', data={
+                                                        "name": "Sour pie",
+                                                        "recipe": "Made by brother"
+                                                        },
+                           headers=dict(Authorization=access_token)
+                           )
+        self.client().post('/api-1.0/categories/1/recipes', data={
+                                                        "name": "chicken",
+                                                        "recipe": "Made by brother"
+                                                        },
+                           headers=dict(Authorization=access_token)
+                           )
+
+        search_result = self.client().get('/api-1.0/categories/1/recipes/search?q=chicken',
+                                          headers=dict(Authorization=access_token)
+                                          )
+        self.assertIn("Made by brother".title(), str(search_result.data))
+        self.assertEqual(search_result.status_code, 200)
+
+    def test_user_can_search_through_recipes_using_get_parameter_q_but_no_token(self):
+        """Tests if a user queries a parameter with no access token"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        self.client().post('/api-1.0/categories', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                               },
+                           headers=dict(Authorization=access_token)
+                           )
+
+        self.client().post('/api-1.0/categories/1/recipes', data={
+                                                        "name": "Sour pie",
+                                                        "detail": "Made by brother"
+                                                        },
+                           headers=dict(Authorization=access_token)
+                           )
+        self.client().post('/api-1.0/categories/1/recipes', data={
+                                                        "name": "chicken",
+                                                        "detail": "Made by brother"
+                                                        },
+                           headers=dict(Authorization=access_token)
+                           )
+
+        search_result = self.client().get('/api-1.0/categories/1/recipes/search?q=chicken',
+                                          )
+        self.assertIn("Please provide an access token", str(search_result.data))
+        self.assertEqual(search_result.status_code, 300)
+
+    def test_user_can_search_through_recipes_using_get_parameter_q_which_is_none_existen(self):
+        """Tests if a user queries a parameter that does not exist"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        self.client().post('/api-1.0/categories', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                               },
+                           headers=dict(Authorization=access_token)
+                           )
+
+        self.client().post('/api-1.0/categories/1/recipes', data={
+                                                        "name": "Sour pie",
+                                                        "detail": "Made by brother"
+                                                        },
+                           headers=dict(Authorization=access_token)
+                           )
+        self.client().post('/api-1.0/categories/1/recipes', data={
+                                                        "name": "chicken",
+                                                        "detail": "Made by brother"
+                                                        },
+                           headers=dict(Authorization=access_token)
+                           )
+
+        search_result = self.client().get('/api-1.0/categories/1/recipes/search?q=NONE_EXISTENT',
+                                          headers=dict(Authorization=access_token)
+                                          )
+        self.assertIn("Sorry we could not find what you are looking for", str(search_result.data))
+        self.assertEqual(search_result.status_code, 200)
+
+    def test_user_can_search_through_recipes_with_invalid_category(self):
+        """Tests if a user queries a parameter and does not provide a valid category"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        search_result = self.client().get('/api-1.0/categories/1/recipes/search',
+                                          headers=dict(Authorization=access_token)
+                                          )
+        self.assertIn("Category does not exist", str(search_result.data))
+        self.assertEqual(search_result.status_code, 405)
+
+    def test_user_can_search_through_recipes_using_get_parameter_q_with_invalid_token(self):
+        """Tests if a user queries a recipe with invalid token """
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+        self.client().post('/api-1.0/categories', data={
+                                                                "name": "Sweet pie",
+                                                                "detail": "Made by mama"
+                                                               },
+                           headers=dict(Authorization=access_token)
+                           )
+
+        self.client().post('/api-1.0/categories/1/recipes', data={
+                                                        "name": "Sour pie",
+                                                        "recipe": "Made by brother"
+                                                        },
+                           headers=dict(Authorization=access_token)
+                           )
+        self.client().post('/api-1.0/categories/1/recipes', data={
+                                                        "name": "chicken",
+                                                        "recipe": "Made by brother"
+                                                        },
+                           headers=dict(Authorization=access_token)
+                           )
+
+        search_result = self.client().get('/api-1.0/categories/1/recipes/search?q=chicken',
+                                          headers=dict(Authorization='Invalid.token')
+                                          )
+        self.assertIn("invalid" or 'expired', str(search_result.data).lower())
+        self.assertEqual(search_result.status_code, 401)
+
+    def test_user_can_get_recipes_by_id_with_non_exist_category(self):
+        """Tests if a user can get recipe by id if the category does not exist"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['Access token']
+
+        result = self.client().get('/api-1.0/categories/1/recipes/1', data={
+                                                        "name": "Sour pie",
+                                                        "recipe": "Made by brother"
+                                                        },
+                           headers=dict(Authorization=access_token)
+                           )
+        self.assertIn("The category does not exist", str(result.data))
+        self.assertEqual(result.status_code, 405)
+
+    def test_user_can_get_recipes_by_id_with_invalid_token(self):
+        """Tests if a user can get recipe by id if the category does not exist"""
+        result = self.client().get('/api-1.0/categories/1/recipes/1', data={
+                                                        "name": "Sour pie",
+                                                        "recipe": "Made by brother"
+                                                        },
+                           headers=dict(Authorization='Invalid.token')
+                           )
+        self.assertIn("invalid" or 'expired', str(result.data).lower())
+        self.assertEqual(result.status_code, 401)
     def tearDown(self):
         """Tear down all initialized variables"""
         with self.app.app_context():

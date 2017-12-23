@@ -1,9 +1,8 @@
 from . import auth_blueprint
 from flask.views import MethodView
 from flask import make_response, request, jsonify
-from app.models import User
 from werkzeug.security import check_password_hash
-from app.models import RevokeToken
+from app.models import RevokeToken, User
 from flasgger import swag_from
 import re
 class RegistrationView(MethodView):
@@ -33,7 +32,7 @@ class RegistrationView(MethodView):
                 else:
                     response = {"Message": "Please fill out First Name, Last Name, email and password"}
                     return make_response(jsonify(response)), 203
-            except Exception as e:
+            except Exception as e:  #pragma: no cover
                 # if error occured returns the error as a message
                 return {'Message': str(e)}, 401
 
@@ -56,21 +55,16 @@ class LoginView(MethodView):
                 if check_password_hash(user.password_hash, request.data['password']):
                     #  Generate access token. This will be used as the authorization header
                     access_token = user.generate_token(user.id)
-                    if access_token:
-                        response = {'Message': 'You have successfully logged in',
-                                    "Access token": access_token.decode()}
-                        return make_response(jsonify(response)), 200
-                    else:
-                        response = {'Message': 'Something went wrong. Please try again'}
-                        return make_response(jsonify(response)), 300
-
+                    response = {'Message': 'You have successfully logged in',
+                                "Access token": access_token.decode()}
+                    return make_response(jsonify(response)), 200
                 else:
                     response = {'Message': 'Password Mismatch. Please try again'}
                     return make_response(jsonify(response)), 301
             else:
                 response = {'Message': 'Email address does not match any. Please try again'}
                 return make_response(jsonify(response)), 401
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             #  Create a response with the error message
             response = {
                         "Message": str(e)
@@ -120,9 +114,6 @@ class ResetPasswordView(MethodView):
             else:
                 response = {"Message": str(user_id)}
                 return make_response(jsonify(response)), 405
-        else:
-            response = {"Please login to change password"}
-            return make_response(jsonify(response)), 400
 
 
 registration_view = RegistrationView.as_view('register_view')

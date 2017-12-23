@@ -68,7 +68,7 @@ def create_app(config_name):
     # The views for the application
 
     @app.route('/')
-    def index():
+    def index():  # pragma: no cover
         return redirect('apidocs')
 
     @swag_from('docs/Categories_get.yml', methods=['GET'])
@@ -309,12 +309,6 @@ def create_app(config_name):
                                                     'Has previous': recipe_object.has_prev}, result)
                                 response.status_code = 200
                                 return response
-
-                        else:
-                            response = jsonify({"Message": "No recipes added yet"})
-                            response.status_code = 404
-                            return response
-
                     elif request.method == 'POST':
                         name = request.data.get('name', '').strip().lower()
                         recipe = request.data.get('recipe', '').strip().lower()
@@ -357,8 +351,8 @@ def create_app(config_name):
             return {"Message": "Please provide an access token"}, 300
         if access_token:
             user_id = User.decode_token(access_token)
-            category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=id).first()
             if not isinstance(user_id, str):
+                category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=id).first()
                 page = int(request.args.get('page', 1))
                 per_page = int(request.args.get('per_page', 20))
                 if category:
