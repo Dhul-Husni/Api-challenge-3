@@ -16,8 +16,6 @@ before_script:
   - sh challenge.sh
 
 script:
-  - pytest
-  - nosetests --exe -v
   - nosetests --exe --with-coverage --cover-package=app
   - coveralls
 
