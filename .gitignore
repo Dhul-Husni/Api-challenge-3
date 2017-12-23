@@ -37,6 +37,7 @@ nosetests.xml
 
 # Virtual environment
 venv/*
+kali/*
 .cache
 =======
 # Byte-compiled / optimized / DLL files
@@ -77,7 +78,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
-htmlcov/
+htmlcov/*
 .tox/
 .coverage
 .coverage.*

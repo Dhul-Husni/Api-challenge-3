@@ -6,3 +6,5 @@ psycopg2
 PyJWT
 flasgger
 flask-heroku
+coverage
+coveralls

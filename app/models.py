@@ -1,5 +1,4 @@
 from app import db
-from flask import current_app
 from werkzeug.security import generate_password_hash
 from datetime import timedelta, datetime
 import jwt
@@ -30,11 +29,7 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    @staticmethod
-    def get_all():
-        return User.query.all()
-
-    def delete(self):
+    def delete(self):  # pragma: no cover
         db.session.delete(self)
         db.session.commit()
 
@@ -50,7 +45,7 @@ class User(db.Model):
             # create the byte string token using the token and the secret key
             jwt_string = jwt.encode(payload, 'sir3n.sn@gmail.com', algorithm='HS256')
             return jwt_string
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             return str(e)
 
     @staticmethod
@@ -90,12 +85,7 @@ class RecipeCategory(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    @staticmethod
-    def get_all(user_id):
-        """This method gets all categories owned by a user"""
-        return RecipeCategory.query.filter_by(created_by=user_id)
-
-    def delete(self):
+    def delete(self):  # pragma: no cover
         db.session.delete(self)
         db.session.commit()
 
@@ -115,17 +105,14 @@ class Recipes(db.Model):
     date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
                               onupdate=db.func.current_timestamp())
 
-    @staticmethod
-    def get_all(category_id):
-        return Recipes.query.filter_by(belonging_to=category_id)
-
     def save(self):
         db.session.add(self)
         db.session.commit()
 
-    def delete(self):
+    def delete(self):  # pragma: no cover
         db.session.delete(self)
         db.session.commit()
+        return "Success"
 
     def __repr__(self):
         return "<Recipe name:{} Recipe:{}>".format(self.name, self.recipe)
@@ -137,7 +124,7 @@ class RevokeToken(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     revoked_token = db.Column(db.Text)
 
-    def save(self):
+    def save(self): # pragma: no cover
         db.session.add(self)
         db.session.commit()
 
