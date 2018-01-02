@@ -23,14 +23,17 @@ def create_app(config_name):
     app.secret_key = 'Sir3n.sn@gmail.com'
     app.config['SWAGGER'] = {
         "swagger": "2.0",
-        "info": {
-            "description": "Andela Api Challenge",
-            "termsOfService": "https://opensource.org/ToS",
-            "title": "Recipes API",
-            "version": "0.0.1",
-            "contact": {
-                "email": "Thalkifly.hassan@andela.com",
-            },
+        "title": "Recipes API",
+        "description": "Powered by Flask! \
+        \nRestful api that gives users power to:\
+        \nRegister, login and manage their account. \
+        \n\tCreate, update, view and delete a category. \
+        \n\tAdd, update, view or delete recipes. \
+        \n\tEnable logging of data manipulation timestamps. ",
+        "termsOfService": "https://opensource.org/ToS",
+        "version": "0.0.1",
+        "contact": {
+            "email": "Thalkifly.hassan@andela.com",
             "license": {
                 "name": "Apache 2.0",
                 "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -43,9 +46,9 @@ def create_app(config_name):
         "host": "api-recipe-challenge.herokuapp.com",
         "securityDefinitions":{
             "TokenHeader":{
-                "type":"apiKey",
-                "name":"Authorization",
-                "in":"header"
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
             }
         },
         "tags": [

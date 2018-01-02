@@ -56,6 +56,9 @@ definitions:
       password:
         type: "string"
         default: "Password1234"
+      Secret word:
+        type: "string"
+        default: "Kali2018"
 
   successfully_registered:
     type: "object"
@@ -69,7 +72,7 @@ definitions:
     properties:
       Message:
         type: "string"
-        default: 'Please fillout First Name, Last Name, email and password'
+        default: 'Please fillout First Name, Last Name, email, password and Secret word'
 
   error_registration:
     type: "object"

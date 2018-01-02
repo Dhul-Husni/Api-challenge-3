@@ -1,5 +1,4 @@
 import unittest
-import os
 import json
 from sqlalchemy.engine import reflection
 from sqlalchemy.schema import (
@@ -37,7 +36,7 @@ def db_DropEverything(db):
             if not fk['name']:
                 continue
             fks.append(
-                ForeignKeyConstraint((),(),name=fk['name'])
+                ForeignKeyConstraint((), (), name=fk['name'])
                 )
         t = Table(table_name,metadata,*fks)
         tbs.append(t)
@@ -61,22 +60,25 @@ class ApiTestCase(unittest.TestCase):
         self.user = {"email": "sir3n.sn@gmail.com",
                      "first_name": "Dhulkifli",
                      "last_name": "Hussein",
-                     "password": "Kali2017"}
+                     "password": "Kali2017",
+                     "Secret word": "Kali2018"}
 
         # bind the app to the current context
         with self.app.app_context():
             db.create_all()
 
     def register_user(self, first_name='Kali', last_name='sir3n',
-                      email='user1234@gmail.com', password='testpassword'):
+                      email='user1234@gmail.com', password='testpassword', secret='Kali2018'):
         """Implied registration . A helper method"""
         user_data = {
                     'email': email,
                     'password': password,
                     'First Name': first_name,
-                    'Last Name': last_name
+                    'Last Name': last_name,
+                    "Secret word": secret
                     }
         return self.client().post('/api-1.0/auth/register', data=user_data)
+
     def test_no_access_token_provided_in_category(self):
         """Tests if a user does not provide an access token to the endpoints"""
         res = self.client().post('/api-1.0/categories', data={
@@ -129,6 +131,7 @@ class ApiTestCase(unittest.TestCase):
                                 )
         self.assertEqual(res.status_code, 203)
         self.assertIn('please use the keys name and detail', str(res.data).lower())
+
     def test_invalid_or_expired_token_in_get_and_post_category(self):
         """Test expired or invalid token in get and post category"""
         res = self.client().post('/api-1.0/categories', data={
@@ -137,8 +140,9 @@ class ApiTestCase(unittest.TestCase):
         },
                                  headers=dict(Authorization='invalid.token')
                                  )
-        self.assertEqual(res.status_code,401)
+        self.assertEqual(res.status_code, 401)
         self.assertIn('invalid' or 'expired', str(res.data).lower())
+
     def test_invalid_or_expired_token_in_get_and_put_delete_category(self):
         """Test expired or invalid token in edit and delete category by id"""
         self.register_user()
@@ -345,6 +349,7 @@ class ApiTestCase(unittest.TestCase):
                                  )
         self.assertEqual(res.status_code, 401)
         self.assertIn("invalid" or 'expired', str(res.data).lower())
+
     def test_user_category_recipe_can_be_created_with_invalid_keys(self):
         """Tests if api can create recipes with invalid keys(post)"""
         self.register_user()
@@ -387,8 +392,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
         self.assertIn('tea spoon'.title(), str(result.data))
         result = self.client().get('/api-1.0/categories/1/recipes',
-                                    headers=dict(Authorization=access_token)
-                                    )
+                                   headers=dict(Authorization=access_token)
+                                   )
         self.assertEqual(result.status_code, 200)
         self.assertIn('tea spoon'.title(), str(result.data))
 
@@ -407,8 +412,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
         self.assertIn('Sweet pie'.title(), str(res.data))
         result = self.client().get('/api-1.0/categories/1/recipes',
-                                    headers=dict(Authorization=access_token)
-                                    )
+                                   headers=dict(Authorization=access_token)
+                                   )
         self.assertEqual(result.status_code, 200)
         self.assertIn('Nothing here yet', str(result.data))
 
@@ -688,8 +693,8 @@ class ApiTestCase(unittest.TestCase):
                                                         "name": "Sour pie",
                                                         "recipe": "Made by brother"
                                                         },
-                           headers=dict(Authorization=access_token)
-                           )
+                                   headers=dict(Authorization=access_token)
+                                   )
         self.assertIn("The category does not exist", str(result.data))
         self.assertEqual(result.status_code, 405)
 
@@ -699,10 +704,11 @@ class ApiTestCase(unittest.TestCase):
                                                         "name": "Sour pie",
                                                         "recipe": "Made by brother"
                                                         },
-                           headers=dict(Authorization='Invalid.token')
-                           )
+                                   headers=dict(Authorization='Invalid.token')
+                                   )
         self.assertIn("invalid" or 'expired', str(result.data).lower())
         self.assertEqual(result.status_code, 401)
+
     def tearDown(self):
         """Tear down all initialized variables"""
         with self.app.app_context():
