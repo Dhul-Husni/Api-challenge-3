@@ -13,7 +13,8 @@ class AuthTestCase(unittest.TestCase):
             'First Name': 'Kali',
             'Last Name': 'Sir3n',
             'email': 'test@example.com',
-            'password': 'test_password'
+            'password': 'test_password',
+            'Secret word':'Kali2018'
         }
         with self.app.app_context():
             db.session.close()
@@ -34,7 +35,8 @@ class AuthTestCase(unittest.TestCase):
         res = self.client().post('/api-1.0/auth/register', data={'First Name': 'Kali',
                                                                  'Last Name': 'Sir3n',
                                                                  'email': 'test@..com',
-                                                                 'password': 'Kali2018'
+                                                                 'password': 'Kali2018',
+                                                                 'Secret word': 'Kali2018'
                                                                  })
         # get the result in json format
         result = json.loads(res.data.decode())
@@ -47,11 +49,12 @@ class AuthTestCase(unittest.TestCase):
         res = self.client().post('/api-1.0/auth/register', data={'First INVALID KEY': 'Kali',
                                                                  'Last INVALID KEY': 'Sir3n',
                                                                  'email': 'test@gmail.com',
-                                                                 'password': 'Kali2018'
+                                                                 'password': 'Kali2018',
+                                                                 'Secret word': 'Kali2018'
                                                                  })
         # get the result in json format
         result = json.loads(res.data.decode())
-        self.assertEqual(result['Message'], 'Please fill out First Name, Last Name, email and password')
+        self.assertEqual(result['Message'], 'Please fill out First Name, Last Name, email, password and Secret word')
 
     def test_invalid_password_provided(self):
         """Makes a post request to the api with invalid password and tests if user
@@ -59,7 +62,8 @@ class AuthTestCase(unittest.TestCase):
         res = self.client().post('/api-1.0/auth/register', data={'First Name': 'Kali',
                                                                  'Last Name': 'Sir3n',
                                                                  'email': 'test@example.com',
-                                                                 'password': 'Kali2'
+                                                                 'password': 'Kali2',
+                                                                 'Secret word': 'Kali2018'
                                                                  })
         # get the result in json format
         result = json.loads(res.data.decode())
@@ -67,11 +71,12 @@ class AuthTestCase(unittest.TestCase):
 
     def test_password_mismatch(self):
         """Makes a post request to the api with password mismatch and tests if user
-        will be registered"""
+        will be logged in"""
         res = self.client().post('/api-1.0/auth/register', data={'First Name': 'Kali',
                                                                  'Last Name': 'Sir3n',
                                                                  'email': 'test@example.com',
-                                                                 'password': 'Kali2018'
+                                                                 'password': 'Kali2018',
+                                                                 'Secret word': 'Kali2018'
                                                                  })
         # get the result in json format
         result = json.loads(res.data.decode())
@@ -83,6 +88,7 @@ class AuthTestCase(unittest.TestCase):
                                                                  })
         res = json.loads(login_res.data.decode())
         self.assertEqual(res['Message'], 'Password Mismatch. Please try again')
+
     def test_already_registered(self):
         """Test if user is already registerd"""
         res = self.client().post('/api-1.0/auth/register', data=self.user_data)
@@ -138,23 +144,14 @@ class AuthTestCase(unittest.TestCase):
         """Test user reset password"""
         res = self.client().post('/api-1.0/auth/register', data=self.user_data)
         self.assertEqual(res.status_code, 201)
-        login_res = self.client().post('/api-1.0/auth/login', data=self.user_data)
 
-        results = json.loads(login_res.data.decode())
-        self.assertEqual(results['Message'], 'You have successfully logged in')
-        self.assertEqual(login_res.status_code, 200)
-        self.assertTrue(results['Access token'])
-
-        reset_res = self.client().post('/api-1.0/auth/reset-password', data={'password':'NEW PASSWORD'},
-                                       headers=dict(Authorization=results['Access token']))
+        reset_res = self.client().post('/api-1.0/auth/reset-password', data={'password':'NEW PASSWORD',
+                                                                             'email':'test@example.com',
+                                                                             'Secret word':'Kali2018'},
+                                       )
         self.assertIn('Password updated successfully', str(reset_res.data))
 
-    def test_user_reset_password_with_no_access_token_provided(self):
-        """Test user trying to reset password with no token provided"""
-        reset_res = self.client().post('/api-1.0/auth/reset-password', data={'password': 'NEW PASSWORD'},)
-        self.assertIn('Please Provide an access token', str(reset_res.data))
-
-    def test_user_reset_password_with_empty_string(self):
+    def test_user_reset_password_with_empty_strings(self):
         """Test user reset password with empty string"""
         res = self.client().post('/api-1.0/auth/register', data=self.user_data)
         self.assertEqual(res.status_code, 201)
@@ -165,15 +162,26 @@ class AuthTestCase(unittest.TestCase):
         self.assertEqual(login_res.status_code, 200)
         self.assertTrue(results['Access token'])
 
-        reset_res = self.client().post('/api-1.0/auth/reset-password', data={'password':''},
+        reset_res = self.client().post('/api-1.0/auth/reset-password', data={'password': ''},
                                        headers=dict(Authorization=results['Access token']))
-        self.assertIn('Password cannot be an empty string', str(reset_res.data))
+        self.assertIn('Please provide your email, Secret word and password', str(reset_res.data))
 
-    def test_user_reset_password_with_invalid_token(self):
-        """Test user reset password with invalid token"""
-        reset_res = self.client().post('/api-1.0/auth/reset-password', data={'password':'NEW PASSWORD'},
+    def test_user_reset_password_with_invalid_secret_word(self):
+        """Test user reset password with invalid secret word"""
+        res = self.client().post('/api-1.0/auth/register', data=self.user_data)
+        reset_res = self.client().post('/api-1.0/auth/reset-password', data={'password': 'NEW PASSWORD',
+                                                                             'email': 'test@example.com',
+                                                                             'Secret word': 'INVALID SECRET WORD'},
                                        headers=dict(Authorization='Invalid.token'))
-        self.assertIn('invalid' or 'expired', str(reset_res.data).lower())
+        self.assertIn('invalid secret word, please try again', str(reset_res.data).lower())
 
+    def test_user_reset_password_with_invalid_email(self):
+        """Test user reset password with invalid email"""
+        res = self.client().post('/api-1.0/auth/register', data=self.user_data)
+        reset_res = self.client().post('/api-1.0/auth/reset-password', data={'password': 'NEW PASSWORD',
+                                                                             'email': 'INVALID@TEST.COM',
+                                                                             'Secret word': 'Kali2018'},
+                                       headers=dict(Authorization='Invalid.token'))
+        self.assertIn('please provide a valid email', str(reset_res.data).lower())
 
 
