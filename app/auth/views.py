@@ -6,6 +6,7 @@ from app.models import RevokeToken, User
 from flasgger import swag_from
 import re
 
+
 class RegistrationView(MethodView):
     """This class handles user registration"""
     @swag_from("docs/Register_user.yml", methods=['POST'])
@@ -19,10 +20,10 @@ class RegistrationView(MethodView):
                 password = request.data.get('password', '')
                 first_name = request.data.get('First Name', '').strip().lower()
                 last_name = request.data.get('Last Name', '').strip().lower()
-                secret = request.data.get('Secret word', '').strip().lower() #  A way to help the user reset password
+                secret = request.data.get('Secret word', '').strip().lower()  # A way to help the user reset password
                 if first_name and last_name and email and password and secret:
                     secret = generate_password_hash(secret)
-                    if re.match(r'^[a-zA-z0-9_+.]+@[a-zA-z-]+\.[a-zA-z-]+$', email): # validate email
+                    if re.match(r'^[a-zA-z0-9_+.]+@[a-zA-z-]+\.[a-zA-z-]+$', email):  # validate email
                         if len(password) >= 8:  # validate password
                             user = User(email=email, password=password, first_name=first_name, last_name=last_name, secret=secret)
                             user.save()
@@ -73,6 +74,7 @@ class LoginView(MethodView):
                         "Message": str(e)
                         }
             return make_response(jsonify(response)), 500
+
 
 class LogoutView(MethodView):
     """Handles user logout"""
