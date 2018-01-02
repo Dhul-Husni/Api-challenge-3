@@ -11,7 +11,7 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True, index=True)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
-    secret = db.Column(db.String(), nullable=False)
+    secret = db.Column(db.String(128), nullable=False)
     password_hash = db.Column(db.String(128))
     category = db.relationship('RecipeCategory', order_by='RecipeCategory.id', cascade="all, delete-orphan")
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
