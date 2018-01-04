@@ -8,4 +8,4 @@ flasgger
 flask-heroku
 coverage
 coveralls
-flask-mail
+flask-mail==0.9.0

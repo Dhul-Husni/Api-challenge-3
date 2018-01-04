@@ -24,11 +24,10 @@ def create_app(config_name):
     app.secret_key = 'Sir3n.sn@gmail.com'
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+    app.config['MAIL_USERNAME'] = 'sir3n.sn@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'Z0mbie@home'
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
-    app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
     app.config['SWAGGER'] = {
         "swagger": "2.0",
         "title": "Recipes API",

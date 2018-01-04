@@ -116,14 +116,11 @@ class ResetPasswordView(MethodView):
                     response = {"Message": "Password updated successfully"}
                     return make_response(jsonify(response)), 201
                 elif secret.lower().strip() == 'send me an email':
-                    msg = 'Hi. Its siren from Api recipes. '
-                    msg += '\n Your Secret word is '
-                    msg += str(user.secret)
-                    msg += ' . Please use it to reset you password. '
-                    msg += 'If you did not request for this message. Please ignore'
+                    msg = 'Yummy Api Password reset. '
                     msg = Message(msg, sender='sir3n.sn@gmail.com', recipients=[email])
-                    msg.body = 'text body'
-                    msg.html = '<b>HTML</b> body'
+                    msg.html = '<b>Hi. Its siren from Api recipes. </b> <p>Your Secret word is '+str(user.secret)\
+                    +'</p>'+ '<p>Please use it to reset your password.\
+                     </p> <p>If you did not request for this message please ignore</p>'
                     mail.send(msg)
                     response = {"Message": "A reset value has been sent with instructions via the email provided."}
                     return make_response(jsonify(response)), 200
