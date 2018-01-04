@@ -128,9 +128,9 @@ class ResetPasswordView(MethodView):
                     response = {"Message": "A reset value has been sent with instructions via the email provided."}
                     return make_response(jsonify(response)), 200
 
-
                 else:
-                    response = {"Message": "Invalid secret word, please try again"}
+                    response = {"Message": "Invalid secret word, please try again",
+                                "Instruction" : "type 'send me an email' in the secret word key to recover via email "}
                     return make_response(jsonify(response)), 400
             else:
                 response = {"Message": "Please provide a valid email"}
