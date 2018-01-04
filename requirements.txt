@@ -8,3 +8,4 @@ flasgger
 flask-heroku
 coverage
 coveralls
+flask-mail
