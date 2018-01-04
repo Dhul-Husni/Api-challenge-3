@@ -1,10 +1,18 @@
 from . import auth_blueprint
 from flask.views import MethodView
+from flask_mail import Mail
+from flask_mail import Message
+from app import create_app
 from flask import make_response, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.models import RevokeToken, User
 from flasgger import swag_from
 import re
+
+
+config_name = "development"
+app = create_app(config_name)
+mail = Mail(app)
 
 
 class RegistrationView(MethodView):
@@ -22,8 +30,7 @@ class RegistrationView(MethodView):
                 last_name = request.data.get('Last Name', '').strip().lower()
                 secret = request.data.get('Secret word', '').strip().lower()  # A way to help the user reset password
                 if first_name and last_name and email and password and secret:
-                    secret = generate_password_hash(secret)
-                    if re.match(r'^[a-zA-z0-9_+.]+@[a-zA-z-]+\.[a-zA-z-]+$', email):  # validate email
+                    if re.match(r'^[a-zA-Z0-9_+.]+@[a-zA-Z-]+\.[a-zA-Z-]+$', email):  # validate email
                         if len(password) >= 8:  # validate password
                             user = User(email=email, password=password, first_name=first_name, last_name=last_name, secret=secret)
                             user.save()
@@ -103,11 +110,25 @@ class ResetPasswordView(MethodView):
         if email and secret and password:
             user = User.query.filter_by(email=email).first()
             if user:
-                if check_password_hash(user.secret, secret):
+                if user.secret == secret:
                     user.password = password
                     user.save()
                     response = {"Message": "Password updated successfully"}
                     return make_response(jsonify(response)), 201
+                elif secret.lower().strip() == 'send me an email':
+                    msg = 'Hi. Its siren from Api recipes. '
+                    msg += '\n Your Secret word is '
+                    msg += str(user.secret)
+                    msg += ' . Please use it to reset you password. '
+                    msg += 'If you did not request for this message. Please ignore'
+                    msg = Message(msg, recipients=[email])
+                    msg.body = 'text body'
+                    msg.html = '<b>HTML</b> body'
+                    mail.send(msg)
+                    response = {"Message": "A reset value has been sent with instructions via the email provided."}
+                    return make_response(jsonify(response)), 200
+
+
                 else:
                     response = {"Message": "Invalid secret word, please try again"}
                     return make_response(jsonify(response)), 400

@@ -1,3 +1,5 @@
+import os
+
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify, request
@@ -5,7 +7,6 @@ from instance.config import app_config
 from flask import redirect
 from flasgger import Swagger
 from flasgger import swag_from
-from flask_heroku import Heroku
 # initialize SQLAlchemy
 db = SQLAlchemy()
 
@@ -21,6 +22,13 @@ def create_app(config_name):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     app.secret_key = 'Sir3n.sn@gmail.com'
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+    app.config['MAIL_USE_TLS'] = False
+    app.config['MAIL_USE_SSL'] = True
+    app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
     app.config['SWAGGER'] = {
         "swagger": "2.0",
         "title": "Recipes API",
@@ -67,7 +75,6 @@ def create_app(config_name):
         ]
     }
     Swagger(app)  # This creates a swagger ui documentation
-    Heroku(app)
     # The views for the application
 
     @app.route('/')
