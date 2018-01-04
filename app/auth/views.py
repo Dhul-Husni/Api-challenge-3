@@ -121,7 +121,7 @@ class ResetPasswordView(MethodView):
                     msg += str(user.secret)
                     msg += ' . Please use it to reset you password. '
                     msg += 'If you did not request for this message. Please ignore'
-                    msg = Message(msg, recipients=[email])
+                    msg = Message(msg, sender='sir3n.sn@gmail.com', recipients=[email])
                     msg.body = 'text body'
                     msg.html = '<b>HTML</b> body'
                     mail.send(msg)
