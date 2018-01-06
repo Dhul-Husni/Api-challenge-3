@@ -168,7 +168,7 @@ class AuthTestCase(unittest.TestCase):
 
     def test_user_reset_password_with_invalid_secret_word(self):
         """Test user reset password with invalid secret word"""
-        res = self.client().post('/api-1.0/auth/register', data=self.user_data)
+        self.client().post('/api-1.0/auth/register', data=self.user_data)
         reset_res = self.client().post('/api-1.0/auth/reset-password', data={'password': 'NEW PASSWORD',
                                                                              'email': 'test@example.com',
                                                                              'Secret word': 'INVALID SECRET WORD'},

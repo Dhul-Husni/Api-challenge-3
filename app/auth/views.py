@@ -1,13 +1,16 @@
+import re
+
 from . import auth_blueprint
 from flask.views import MethodView
 from flask_mail import Mail
 from flask_mail import Message
-from app import create_app
+from app import create_app, validate_illegal_char
 from flask import make_response, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.models import RevokeToken, User
 from flasgger import swag_from
-import re
+
+
 
 
 config_name = "development"
@@ -30,22 +33,20 @@ class RegistrationView(MethodView):
                 last_name = request.data.get('Last Name', '').strip().lower()
                 secret = request.data.get('Secret word', '').strip().lower()  # A way to help the user reset password
                 if first_name and last_name and email and password and secret:
-                    if len(email) or len(first_name) or len(last_name) or len(secret)  >= 80:
+                    if len(email) >=80 or len(first_name) >=80 or len(last_name) >= 80 or len(secret)  >= 80:
                         response = jsonify({
                             "Message": "Please use a shorter value"
                         })
                         response.status_code = 401
                         return response
 
-                    validate_illegal_char = bool(re.search(r'[!@#$%^&*()_0-9\-\\={}\[]:;<,>\?]+', first_name or
-                                                           last_name))
-                    if not validate_illegal_char:
+                    if validate_illegal_char(first_name+last_name):
                         response = jsonify({
                             "Message": "Fatal! illegal characters used"
                         })
                         response.status_code = 401
                         return response
-                    if re.match(r'^[a-zA-Z0-9_+.]+@[a-zA-Z-]+\.[a-zA-Z-]+$', email):  # validate email
+                    if re.match(r'^[a-zA-Z0-9_+.]+@[a-zA-z-]+\.[a-zA-Z-]+$', email):  # validate email
                         if len(password) >= 8:  # validate password
                             user = User(email=email, password=password, first_name=first_name, last_name=last_name, secret=secret)
                             user.save()

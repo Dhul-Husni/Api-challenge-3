@@ -16,7 +16,7 @@ def validate_illegal_char(word):
     """This function is a helper method to validate illegal characters
     word: word to be validated
     """
-    return bool(re.search(r'[^\w]', word))
+    return bool(re.search(r"[^\w\s']", word))
 
 
 def create_app(config_name):
@@ -361,7 +361,7 @@ def create_app(config_name):
                                 })
                                 response.status_code = 401
                                 return response
-                            if validate_illegal_char(name + detail):  # Validate illegal characters
+                            if validate_illegal_char(name+recipe):  # Validate illegal characters
                                 response = jsonify({
                                     "Message": "Fatal! illegal characters used"
                                 })
@@ -486,7 +486,7 @@ def create_app(config_name):
                                     })
                                     response.status_code = 401
                                     return response
-                                if validate_illegal_char(name + detail):  # Validate illegal characters
+                                if validate_illegal_char(name+recipe):  # Validate illegal characters
                                     response = jsonify({
                                         "Message": "Fatal! illegal characters used"
                                     })
