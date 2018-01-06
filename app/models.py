@@ -8,7 +8,7 @@ class User(db.Model):
     """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), unique=True, index=True)
+    email = db.Column(db.String(80), unique=True, index=True)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
     secret = db.Column(db.String(128), nullable=False)

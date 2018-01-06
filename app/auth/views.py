@@ -30,6 +30,21 @@ class RegistrationView(MethodView):
                 last_name = request.data.get('Last Name', '').strip().lower()
                 secret = request.data.get('Secret word', '').strip().lower()  # A way to help the user reset password
                 if first_name and last_name and email and password and secret:
+                    if len(email) or len(first_name) or len(last_name) or len(secret)  >= 80:
+                        response = jsonify({
+                            "Message": "Please use a shorter value"
+                        })
+                        response.status_code = 401
+                        return response
+
+                    validate_illegal_char = bool(re.search(r'[!@#$%^&*()_0-9\-\\={}\[]:;<,>\?]+', first_name or
+                                                           last_name))
+                    if not validate_illegal_char:
+                        response = jsonify({
+                            "Message": "Fatal! illegal characters used"
+                        })
+                        response.status_code = 401
+                        return response
                     if re.match(r'^[a-zA-Z0-9_+.]+@[a-zA-Z-]+\.[a-zA-Z-]+$', email):  # validate email
                         if len(password) >= 8:  # validate password
                             user = User(email=email, password=password, first_name=first_name, last_name=last_name, secret=secret)

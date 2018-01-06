@@ -1,4 +1,5 @@
 import os
+import re
 
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
@@ -9,6 +10,13 @@ from flasgger import Swagger
 from flasgger import swag_from
 # initialize SQLAlchemy
 db = SQLAlchemy()
+
+
+def validate_illegal_char(word):
+    """This function is a helper method to validate illegal characters
+    word: word to be validated
+    """
+    return bool(re.search(r'[^\w]', word))
 
 
 def create_app(config_name):
@@ -24,8 +32,8 @@ def create_app(config_name):
     app.secret_key = 'Sir3n.sn@gmail.com'
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USERNAME'] = 'sir3n.sn@gmail.com'
-    app.config['MAIL_PASSWORD'] = 'Z0mbie@home'
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
     app.config['SWAGGER'] = {
@@ -101,6 +109,19 @@ def create_app(config_name):
                     name = str(request.data.get('name', '')).strip().lower()
                     detail = str(request.data.get('detail', '')).strip().lower()
                     if name and detail:
+                        if len(name) >= 80 or len(detail) >= 80:  # Validate length of input should not be > than 80
+                            response = jsonify({
+                                "Message": "Please use a shorter name or detail(description)"
+                            })
+                            response.status_code = 401
+                            return response
+                        if validate_illegal_char(name+detail):  # Validate illegal characters
+                            response = jsonify({
+                                "Message": "Fatal! illegal characters used"
+                            })
+                            response.status_code = 401
+                            return response
+
                         # checks if the category posted already exists with the user
                         check_category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(name=name).first()
                         if not check_category:
@@ -183,6 +204,18 @@ def create_app(config_name):
                         name = str(request.data.get('name', '')).strip().lower()
                         detail = str(request.data.get('detail', '')).strip().lower()
                         if name and detail:
+                            if len(name) >= 80 or len(detail) >= 80:  # Validate length of input should not be > than 80
+                                response = jsonify({
+                                    "Message": "Please use a shorter name or detail(description)"
+                                })
+                                response.status_code = 401
+                                return response
+                            if validate_illegal_char(name + detail):  # Validate illegal characters
+                                response = jsonify({
+                                    "Message": "Fatal! illegal characters used"
+                                })
+                                response.status_code = 401
+                                return response
                             category.name = name
                             category.detail = detail
                             category.save()
@@ -322,6 +355,18 @@ def create_app(config_name):
                         name = request.data.get('name', '').strip().lower()
                         recipe = request.data.get('recipe', '').strip().lower()
                         if name and recipe:
+                            if len(name) >= 80 or len(recipe) >= 80:  # Validate length of input should not be > than 80
+                                response = jsonify({
+                                    "Message": "Please use a shorter name or recipe(description)"
+                                })
+                                response.status_code = 401
+                                return response
+                            if validate_illegal_char(name + detail):  # Validate illegal characters
+                                response = jsonify({
+                                    "Message": "Fatal! illegal characters used"
+                                })
+                                response.status_code = 401
+                                return response
                             the_recipes = Recipes(name=name, recipe=recipe, belonging_to=category)
                             the_recipes.save()
                             for recipe in category.recipes.all():
@@ -435,6 +480,18 @@ def create_app(config_name):
                             name = request.data.get('name', '').strip().lower()
                             recipe = request.data.get('recipe', '').strip().lower()
                             if name and recipe:
+                                if len(name) >= 80 or len(recipe) >= 80:  # Validate length of input should not be > than 80
+                                    response = jsonify({
+                                        "Message": "Please use a shorter name or recipe(description)"
+                                    })
+                                    response.status_code = 401
+                                    return response
+                                if validate_illegal_char(name + detail):  # Validate illegal characters
+                                    response = jsonify({
+                                        "Message": "Fatal! illegal characters used"
+                                    })
+                                    response.status_code = 401
+                                    return response
                                 for the_recipe in current_recipe:
                                     the_recipe.name = name
                                     the_recipe.recipe = recipe
