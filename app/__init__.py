@@ -113,13 +113,13 @@ def create_app(config_name):
                             response = jsonify({
                                 "Message": "Please use a shorter name or detail(description)"
                             })
-                            response.status_code = 401
+                            response.status_code = 400
                             return response
                         if validate_illegal_char(name+detail):  # Validate illegal characters
                             response = jsonify({
                                 "Message": "Fatal! illegal characters used"
                             })
-                            response.status_code = 401
+                            response.status_code = 400
                             return response
 
                         # checks if the category posted already exists with the user
@@ -359,13 +359,13 @@ def create_app(config_name):
                                 response = jsonify({
                                     "Message": "Please use a shorter name or recipe(description)"
                                 })
-                                response.status_code = 401
+                                response.status_code = 400
                                 return response
                             if validate_illegal_char(name+recipe):  # Validate illegal characters
                                 response = jsonify({
                                     "Message": "Fatal! illegal characters used"
                                 })
-                                response.status_code = 401
+                                response.status_code = 400
                                 return response
                             the_recipes = Recipes(name=name, recipe=recipe, belonging_to=category)
                             the_recipes.save()
@@ -484,13 +484,13 @@ def create_app(config_name):
                                     response = jsonify({
                                         "Message": "Please use a shorter name or recipe(description)"
                                     })
-                                    response.status_code = 401
+                                    response.status_code = 400
                                     return response
                                 if validate_illegal_char(name+recipe):  # Validate illegal characters
                                     response = jsonify({
                                         "Message": "Fatal! illegal characters used"
                                     })
-                                    response.status_code = 401
+                                    response.status_code = 400
                                     return response
                                 for the_recipe in current_recipe:
                                     the_recipe.name = name
