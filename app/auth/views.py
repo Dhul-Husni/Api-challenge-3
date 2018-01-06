@@ -23,50 +23,48 @@ class RegistrationView(MethodView):
     @swag_from("docs/Register_user.yml", methods=['POST'])
     def post(self):
         """Handles post requests from this url /auth/register"""
-        user = User.query.filter_by(email=request.data['email'].strip()).first()  # returns None if none exist
-        if not user:
-            # Register the user
-            try:
-                email = request.data.get('email', '').strip().lower()
-                password = request.data.get('password', '')
-                first_name = request.data.get('First Name', '').strip().lower()
-                last_name = request.data.get('Last Name', '').strip().lower()
-                secret = request.data.get('Secret word', '').strip().lower()  # A way to help the user reset password
-                if first_name and last_name and email and password and secret:
-                    if len(email) >=80 or len(first_name) >=80 or len(last_name) >= 80 or len(secret)  >= 80:
-                        response = jsonify({
-                            "Message": "Please use a shorter value"
-                        })
-                        response.status_code = 401
-                        return response
+        # Register the user
+        try:
+            email = request.data.get('email', '').strip().lower()
+            password = request.data.get('password', '')
+            first_name = request.data.get('First Name', '').strip().lower()
+            last_name = request.data.get('Last Name', '').strip().lower()
+            secret = request.data.get('Secret word', '').strip().lower()  # A way to help the user reset password
+            if first_name and last_name and email and password and secret:
+                if len(email) >=80 or len(first_name) >=80 or len(last_name) >= 80 or len(secret)  >= 80:
+                    response = jsonify({
+                        "Message": "Please use a shorter value"
+                    })
+                    response.status_code = 401
+                    return response
 
-                    if validate_illegal_char(first_name+last_name):
-                        response = jsonify({
-                            "Message": "Fatal! illegal characters used"
-                        })
-                        response.status_code = 401
-                        return response
-                    if re.match(r'^[a-zA-Z0-9_+.]+@[a-zA-z-]+\.[a-zA-Z-]+$', email):  # validate email
-                        if len(password) >= 8:  # validate password
+                if validate_illegal_char(first_name+last_name):
+                    response = jsonify({
+                        "Message": "Fatal! illegal characters used"
+                    })
+                    response.status_code = 401
+                    return response
+                if re.match(r'^[a-zA-Z0-9_+.]+@[a-zA-z-]+\.[a-zA-Z-]+$', email):  # validate email
+                    if len(password) >= 8:  # validate password
+                        existing_user = User.query.filter_by(email=email).first()  # check if the user exists
+                        if existing_user:
+                            response = {'Message': 'User already exists. Please login'}
+                            return make_response(jsonify(response)), 202
+                        else:  # the user does not exist and should be registered
                             user = User(email=email, password=password, first_name=first_name, last_name=last_name, secret=secret)
                             user.save()
                             response = {'Message': 'You have successfully registered'}
-                        else:
-                            response = {'Message': 'Password must be greater than 8'}
                     else:
-                        response = {'Message': 'Please provide a valid email'}
-                    return make_response(jsonify(response)), 201
+                        response = {'Message': 'Password must be greater than 8'}
                 else:
-                    response = {"Message": "Please fill out First Name, Last Name, email, password and Secret word"}
-                    return make_response(jsonify(response)), 203
-            except Exception as e:  #pragma: no cover
-                # if error occured returns the error as a message
-                return {'Message': str(e)}, 401
-
-        else:
-            # The user is already registered. We don't want to register them twice
-            response = {'Message': 'User already exists. Please login'}
-            return make_response(jsonify(response)), 202
+                    response = {'Message': 'Please provide a valid email'}
+                return make_response(jsonify(response)), 201
+            else:
+                response = {"Message": "Please fill out First Name, Last Name, email, password and Secret word"}
+                return make_response(jsonify(response)), 203
+        except Exception as e:  #pragma: no cover
+            # if error occured returns the error as a message
+            return {'Message': str(e)}, 401
 
 
 class LoginView(MethodView):
