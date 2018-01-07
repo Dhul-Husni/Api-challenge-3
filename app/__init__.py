@@ -285,7 +285,7 @@ def create_app(config_name):
                             }
                             result.append(obj)
                     if not result:
-                        message = {"Message": "Sorry we could not find what you are looking for"}, 403
+                        message = {"Message": "Sorry we could not find what you are looking for"}
                         result.append(message)
                     response = jsonify({'Next Page': search_result.next_num,
                                         'Prev Page': search_result.prev_num,
@@ -427,7 +427,7 @@ def create_app(config_name):
                                     }
                                     result.append(obj)
                             if not result:
-                                message = {"Message": "Sorry we could not find what you are looking for"}, 403
+                                message = {"Message": "Sorry we could not find what you are looking for"}
                                 result.append(message)
                             response = jsonify({'Next Page': search_result.next_num,
                                                 'Prev Page': search_result.prev_num,
