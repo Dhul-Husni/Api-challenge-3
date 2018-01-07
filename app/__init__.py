@@ -141,7 +141,7 @@ def create_app(config_name):
                             response.status_code = 409
                             return response
                     else:
-                        response = jsonify({"Message": "please use keys name and detail"})
+                        response = jsonify({"Message": "please use keys name and detail (Case Sensitive)"})
                         response.status_code = 203
                         return response
                 else:
@@ -230,7 +230,7 @@ def create_app(config_name):
                             response.status_code = 200
                             return response
                         else:
-                            response = jsonify({"Message": "Please use the keys name and detail"})
+                            response = jsonify({"Message": "Please use the keys name and detail (Case Sensitive)"})
                             response.status_code = 203
                             return response
                     # Get
@@ -295,7 +295,7 @@ def create_app(config_name):
                     return response
 
                 else:
-                    message = {"Message": "Please provide a search query"}
+                    message = {"Message": "Please provide a search query ex: .../search?q=example"}
                     response = jsonify(message)
                     response.status_code = 404
                     return response
@@ -382,7 +382,7 @@ def create_app(config_name):
                                 response.status_code = 201
                                 return response
                         else:
-                            return {"Message": "Please use keys name and recipe"}, 203
+                            return {"Message": "Please use keys name and recipe (Case sensitive)"}, 203
                 else:
                     return {"Message": "Category does not exist"}, 405
 
@@ -437,7 +437,7 @@ def create_app(config_name):
                             return response
 
                         else:
-                            message = {"Message": "Please provide a search query"}
+                            message = {"Message": "Please provide a search query ex: .../search?q=example"}
                             response = jsonify(message)
                             response.status_code = 404
                             return response
@@ -505,7 +505,7 @@ def create_app(config_name):
                                     response.status_code = 201
                                     return response
                             else:
-                                return {"Message": "name and recipe cannot be empty"}, 203
+                                return {"Message": "name and recipe cannot be empty (Case sensitive)"}, 203
 
                         elif request.method == 'GET':
                             for the_recipe in current_recipe:

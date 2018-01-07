@@ -60,7 +60,7 @@ class RegistrationView(MethodView):
                     response = {'Message': 'Please provide a valid email'}
                 return make_response(jsonify(response)), 201
             else:
-                response = {"Message": "Please fill out First Name, Last Name, email, password and Secret word"}
+                response = {"Message": "Please fill out First Name, Last Name, email, password and Secret word (Case Sensitive)"}
                 return make_response(jsonify(response)), 203
         except Exception as e:  #pragma: no cover
             # if error occured returns the error as a message
@@ -72,6 +72,13 @@ class LoginView(MethodView):
     @swag_from("docs/Login.yml", methods=['POST'])
     def post(self):
         """Handles post requests to this url /auth/login"""
+        email = request.data.get('email', '').strip().lower()
+        password = request.data.get('password','').strip().lower()
+        if not email and password:
+            response = {
+                "Message": "please use keys email and password (Case Sensitive)"
+            }
+            return make_response(jsonify(response)), 203
         try:
             #  check if user exists
             user = User.query.filter_by(email=request.data['email'].lower()).first()
@@ -150,7 +157,7 @@ class ResetPasswordView(MethodView):
                 response = {"Message": "Please provide a valid email"}
                 return make_response(jsonify(response)), 405
         else:
-            response = {"Message": "Please provide your email, Secret word and password"}
+            response = {"Message": "Please provide your email, Secret word and password (Case Sensitive)"}
             return make_response(jsonify(response)), 401
 
 

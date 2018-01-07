@@ -54,7 +54,7 @@ class AuthTestCase(unittest.TestCase):
                                                                  })
         # get the result in json format
         result = json.loads(res.data.decode())
-        self.assertEqual(result['Message'], 'Please fill out First Name, Last Name, email, password and Secret word')
+        self.assertEqual(result['Message'], 'Please fill out First Name, Last Name, email, password and Secret word (Case Sensitive)')
 
     def test_invalid_password_provided(self):
         """Makes a post request to the api with invalid password and tests if user
