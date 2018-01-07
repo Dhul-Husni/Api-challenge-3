@@ -14,14 +14,6 @@ produces:
 security:
   - TokenHeader: []
 parameters:
--   description: "The page to be outputted (Results are paginated)"
-    in: query
-    name: "page"
-    type: integer
--   description: "Number of results per page (default is 20)"
-    in: query
-    name: "per_page"
-    type: integer
 -   name: "id"
     in: "path"
     description: "ID of Category to return"
