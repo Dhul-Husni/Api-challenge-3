@@ -125,6 +125,9 @@ class ResetPasswordView(MethodView):
             user = User.query.filter_by(email=email).first()
             if user:
                 if user.secret == secret:
+                    if not len(password) >= 8:
+                        response = {'Message': 'Password must be greater than 8'}
+                        return make_response(jsonify(response)), 400
                     user.password = password
                     user.save()
                     response = {"Message": "Password updated successfully"}
