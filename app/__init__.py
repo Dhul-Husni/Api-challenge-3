@@ -16,7 +16,7 @@ def validate_illegal_char(word):
     """This function is a helper method to validate illegal characters
     word: word to be validated
     """
-    return bool(re.search(r"[^\w\s']", word))
+    return bool(re.search(r"[^\w\s,\\']", word))
 
 
 def create_app(config_name):
