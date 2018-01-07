@@ -74,7 +74,7 @@ class LoginView(MethodView):
         """Handles post requests to this url /auth/login"""
         email = request.data.get('email', '').strip().lower()
         password = request.data.get('password','').strip().lower()
-        if not email and password:
+        if not email or not password:
             response = {
                 "Message": "please use keys email and password (Case Sensitive)"
             }
