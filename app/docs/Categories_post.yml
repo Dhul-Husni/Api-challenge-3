@@ -27,13 +27,13 @@ responses:
       "Recipe categories have been added successfully"
     schema:
       $ref: "#/definitions/successfully_get_categories"
-  203:
+  400:
     description: |
       If the user does not fill out the parameter name and detail
     schema:
       $ref: "#/definitions/Failed_category_post"
 
-  300:
+  499:
     description: |
       If the user does not provide an access token
     schema:

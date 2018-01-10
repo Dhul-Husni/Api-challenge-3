@@ -67,7 +67,7 @@ class RegistrationView(MethodView):
                 return make_response(jsonify(response)), 449
         except Exception as e:  #pragma: no cover
             # if error occured returns the error as a message
-            return {'Message': str(e)}, 401
+            return {'Message': str(e)}, 500
 
 
 class LoginView(MethodView):

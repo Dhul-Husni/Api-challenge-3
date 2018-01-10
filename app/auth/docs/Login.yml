@@ -23,19 +23,14 @@ responses:
       the user is successfully Logged in
     schema:
       $ref: "#/definitions/successfully_Loggedin"
-  300:
+  500:
     description: |
       If an error occured during the user login
     schema:
       $ref: "#/definitions/Failed_login"
-  301:
-    description: |
-        Password Mismatch
-    schema:
-      $ref: "#/definitions/Failed_login_auth"
   401:
     description: |
-      Email address does not match any
+      Incorrect Email or Password
     schema:
       $ref: "#/definitions/Failed_email_login"
   500:

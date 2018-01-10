@@ -41,17 +41,17 @@ responses:
       {Sorry we could not find what you are looking for}"
     schema:
       $ref: "#/definitions/successfully_get_recipes"
-  300:
+  499:
     description: |
       If the user does not provide an access token
     schema:
       $ref: "#/definitions/No_accesstoken_provided"
-  401:
+  498:
     description: |
       If the user provided a token that does not exist or a token that is expired. The error message is returned in this case
     schema:
       $ref: "#/definitions/Failed_get_category"
-  403:
+  404:
     description: |
       If the Category does not contain a recipe with similar names
     schema:
@@ -62,7 +62,7 @@ responses:
     schema:
       $ref: "#/definitions/Empty_search_query"
 
-  405:
+  404:
     description: |
       If the recipe category does not exist
     schema:

@@ -31,12 +31,12 @@ responses:
       "Recipe is successfully returned <OK>"
     schema:
       $ref: "#/definitions/successfully_get_recipe"
-  300:
+  499:
     description: |
       If the user does not provide an access token
     schema:
       $ref: "#/definitions/No_accesstoken_provided"
-  401:
+  498:
     description: |
       If the user provided a token that does not exist or a token that is expired. The error message is returned in this case
     schema:
@@ -48,7 +48,7 @@ responses:
     schema:
       $ref: "#/definitions/Recipe_does_not_exist"
 
-  405:
+  404:
     description: |
       If the recipe category does not exist
     schema:

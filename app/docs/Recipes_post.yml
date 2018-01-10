@@ -34,22 +34,22 @@ responses:
       "Recipe categories have been added successfully"
     schema:
       $ref: "#/definitions/successfully_get_recipes"
-  203:
+  400:
     description: |
       If the user does not fill out the parameter name and detail
     schema:
       $ref: "#/definitions/Failed_recipe_post"
-  401:
+  498:
     description: |
       If the user provided a token that does not exist or a token that is expired. The error message is returned in this case
     schema:
       $ref: "#/definitions/Failed_get_category"
-  300:
+  499:
     description: |
       If the user does not provide an access token
     schema:
       $ref: "#/definitions/No_accesstoken_provided"
-  405:
+  404:
     description: |
       If the recipe category does not exist
     schema:

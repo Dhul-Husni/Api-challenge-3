@@ -23,17 +23,17 @@ responses:
       the user is successfully registered
     schema:
       $ref: "#/definitions/successfully_registered"
-  203:
+  400:
     description: |
       If the user does not fillout the parameters
     schema:
       $ref: "#/definitions/Failed_registration"
-  401:
+  500:
     description: |
       if an error occured it is returned
     schema:
       $ref: "#/definitions/error_registration"
-  202:
+  406:
     description: |
       If the user already exists
     schema:
