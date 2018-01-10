@@ -93,7 +93,7 @@ class ApiTestCase(unittest.TestCase):
             "name": "Sweet pie",
             "detail": "Made by mama"
         },)
-        self.assertEqual(res.status_code, 300)
+        self.assertEqual(res.status_code, 499)
         self.assertIn('Please Provide an access token', str(res.data))
 
     def test_GetCategoryById_NoAccessToken_ShouldRefuse(self):
@@ -102,7 +102,7 @@ class ApiTestCase(unittest.TestCase):
             "name": "Sweet pie",
             "detail": "Made by mama"
         },)
-        self.assertEqual(res.status_code, 300)
+        self.assertEqual(res.status_code, 499)
         self.assertIn('please provide an access token', str(res.data).lower())
 
     def test_PostCategory_BadItemNames_ShouldReturnException(self):
@@ -116,7 +116,7 @@ class ApiTestCase(unittest.TestCase):
         },
                                  headers=dict(Authorization=access_token)
                                  )
-        self.assertEqual(res.status_code, 203)
+        self.assertEqual(res.status_code, 400)
         self.assertIn('please use keys name and detail', str(res.data))
 
     def test_EditCategory_BadItemNames_ShouldReturnException(self):
@@ -137,7 +137,7 @@ class ApiTestCase(unittest.TestCase):
         },
                                 headers=dict(Authorization=access_token)
                                 )
-        self.assertEqual(res.status_code, 203)
+        self.assertEqual(res.status_code, 400)
         self.assertIn('please use the keys name and detail', str(res.data).lower())
 
     def test_PostCategory_InvalidToken_ShouldReturnException(self):
@@ -148,7 +148,7 @@ class ApiTestCase(unittest.TestCase):
         },
                                  headers=dict(Authorization='invalid.token')
                                  )
-        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.status_code, 498)
         self.assertIn('invalid', str(res.data).lower())
 
     def test_EditCategory_InvalidToken_ShouldReturnException(self):
@@ -167,7 +167,7 @@ class ApiTestCase(unittest.TestCase):
         result = self.client().get('/api-1.0/categories/{}'.format(result_in_json['id']),
                                    headers=dict(Authorization='Invalid.token')
                                    )
-        self.assertEqual(result.status_code, 401)
+        self.assertEqual(result.status_code, 498)
         self.assertIn('invalid' or 'expired', str(result.data).lower())
 
     def test_login_ProvideValidDetails_ShouldReturnToken(self):
@@ -240,7 +240,7 @@ class ApiTestCase(unittest.TestCase):
         },
                                  headers=dict(Authorization=access_token)
                                  )
-        self.assertEqual(res.status_code, 409)
+        self.assertEqual(res.status_code, 404)
         self.assertIn('Category already exists', str(res.data))
 
     def test_users_can_get_category_by_id(self):
@@ -347,7 +347,7 @@ class ApiTestCase(unittest.TestCase):
                                                                 },
                                  headers=dict(Authorization='Invalid.token')
                                  )
-        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.status_code, 498)
         self.assertIn("invalid" or 'expired', str(res.data).lower())
 
     def test_PostRecipe_BadItemNames_ShouldReturnException(self):
@@ -368,7 +368,7 @@ class ApiTestCase(unittest.TestCase):
                                                                                     },
                                     headers=dict(Authorization=access_token)
                                     )
-        self.assertEqual(result.status_code, 203)
+        self.assertEqual(result.status_code, 400)
         self.assertIn('Please use keys name and recipe', str(result.data))
 
     def test_GetRecipe_GetARecipe_ShouldReturnRecipe(self):
@@ -486,14 +486,14 @@ class ApiTestCase(unittest.TestCase):
         """Tests if a user queries a parameter with no token"""
         search_result = self.client().get('/api-1.0/categories/search?q=chicken',)
         self.assertIn("Please provide an access token".lower(), str(search_result.data).lower())
-        self.assertEqual(search_result.status_code, 300)
+        self.assertEqual(search_result.status_code, 499)
 
     def test_if_user_can_search_through_categories_with_invalid_token(self):
         """Tests if a user queries a parameter with invalid token"""
         search_result = self.client().get('/api-1.0/categories/search?q=chicken',
                                           headers=dict(Authorization='Invalid.token'))
         self.assertIn("invalid" or "expired", str(search_result.data).lower())
-        self.assertEqual(search_result.status_code, 401)
+        self.assertEqual(search_result.status_code, 498)
 
     def test_Search_NoneExistingData_ShouldReturnNotFound(self):
         """Tests if a user queries a parameter WITH NONE EXISTING DATA"""
@@ -531,7 +531,7 @@ class ApiTestCase(unittest.TestCase):
                                           headers=dict(Authorization=access_token)
                                           )
         self.assertIn("Please provide a search query", str(search_result.data))
-        self.assertEqual(search_result.status_code, 404)
+        self.assertEqual(search_result.status_code, 400)
 
     def test_PostRecipe_NoTokenProvided_ShouldReturnException(self):
         """Tests if api can create recipes when no token in headers(post)"""
@@ -550,7 +550,7 @@ class ApiTestCase(unittest.TestCase):
                                                                                    "recipe": "1 tea spoon sugar"
                                                                                     },
                                     )
-        self.assertEqual(result.status_code, 300)
+        self.assertEqual(result.status_code, 499)
         self.assertIn('Please provide an access token', str(result.data))
 
     def test_Search_AllValidDataProvided_ShouldReturnItems(self):
@@ -612,7 +612,7 @@ class ApiTestCase(unittest.TestCase):
         search_result = self.client().get('/api-1.0/categories/1/recipes/search?q=chicken',
                                           )
         self.assertIn("Please provide an access token", str(search_result.data))
-        self.assertEqual(search_result.status_code, 300)
+        self.assertEqual(search_result.status_code, 499)
 
     def test_Search_DataNotInApi_ShouldReturnNotFound(self):
         """Tests if a user queries a parameter that does not exist in api
@@ -657,7 +657,7 @@ class ApiTestCase(unittest.TestCase):
                                           headers=dict(Authorization=access_token)
                                           )
         self.assertIn("Category does not exist", str(search_result.data))
-        self.assertEqual(search_result.status_code, 405)
+        self.assertEqual(search_result.status_code, 404)
 
     def test_searchRecipes_InvalidToken_ShouldReturnException(self):
         """Tests if a user queries a recipe with invalid token """
@@ -688,7 +688,7 @@ class ApiTestCase(unittest.TestCase):
                                           headers=dict(Authorization='Invalid.token')
                                           )
         self.assertIn("invalid" or 'expired', str(search_result.data).lower())
-        self.assertEqual(search_result.status_code, 401)
+        self.assertEqual(search_result.status_code, 498)
 
     def test_GetRecipes_NoneExitentCategory_ShouldReturnException(self):
         """Tests if a user can get recipe by id from the category that does not exist"""
@@ -703,7 +703,7 @@ class ApiTestCase(unittest.TestCase):
                                    headers=dict(Authorization=access_token)
                                    )
         self.assertIn("The category does not exist", str(result.data))
-        self.assertEqual(result.status_code, 405)
+        self.assertEqual(result.status_code, 404)
 
     def test_GetRecipeById_InvalidToken_ShouldReturnException(self):
         """Tests if a user can get recipe by id with an invalid token"""
@@ -714,7 +714,7 @@ class ApiTestCase(unittest.TestCase):
                                    headers=dict(Authorization='Invalid.token')
                                    )
         self.assertIn("invalid" or 'expired', str(result.data).lower())
-        self.assertEqual(result.status_code, 401)
+        self.assertEqual(result.status_code, 498)
 
     def tearDown(self):
         """Tear down all initialized variables"""

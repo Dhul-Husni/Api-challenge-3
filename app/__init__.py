@@ -98,7 +98,7 @@ def create_app(config_name):
         if auth_header:
             access_token = auth_header
         else:
-            return {"Message": "Please Provide an access token"}, 300
+            return {"Message": "Please Provide an access token"}, 499
         if access_token:
             # Attempt to decode and the user id
             user_id = User.decode_token(access_token)
@@ -114,13 +114,13 @@ def create_app(config_name):
                             response = jsonify({
                                 "Message": "Please use a shorter name or detail(description)"
                             })
-                            response.status_code = 400
+                            response.status_code = 411
                             return response
                         if validate_illegal_char(name+detail):  # Validate illegal characters
                             response = jsonify({
                                 "Message": "Fatal! illegal characters used"
                             })
-                            response.status_code = 400
+                            response.status_code = 406
                             return response
 
                         # checks if the category posted already exists with the user
@@ -139,11 +139,11 @@ def create_app(config_name):
                             return response
                         else:
                             response = jsonify({'Message': 'Category already exists'})
-                            response.status_code = 409
+                            response.status_code = 404
                             return response
                     else:
                         response = jsonify({"Message": "please use keys name and detail (Case Sensitive)"})
-                        response.status_code = 203
+                        response.status_code = 400
                         return response
                 else:
                     # GET
@@ -175,7 +175,7 @@ def create_app(config_name):
                 #  Token is not legit so return the error message
                 message = user_id
                 response = jsonify({"Message": message})
-                response.status_code = 401
+                response.status_code = 498
                 return response
 
     @swag_from('docs/Category_id_get.yml', methods=['GET'])
@@ -187,7 +187,7 @@ def create_app(config_name):
         if auth_header:
             access_token = auth_header
         else:
-            return {"Message": "Please provide an access token"}, 300
+            return {"Message": "Please provide an access token"}, 499
         # retrieve a category by it's id
         if access_token:
             user_id = User.decode_token(access_token)
@@ -209,13 +209,13 @@ def create_app(config_name):
                                 response = jsonify({
                                     "Message": "Please use a shorter name or detail(description)"
                                 })
-                                response.status_code = 401
+                                response.status_code = 411
                                 return response
                             if validate_illegal_char(name + detail):  # Validate illegal characters
                                 response = jsonify({
                                     "Message": "Fatal! illegal characters used"
                                 })
-                                response.status_code = 401
+                                response.status_code = 406
                                 return response
                             category.name = name
                             category.detail = detail
@@ -232,7 +232,7 @@ def create_app(config_name):
                             return response
                         else:
                             response = jsonify({"Message": "Please use the keys name and detail (Case Sensitive)"})
-                            response.status_code = 203
+                            response.status_code = 400
                             return response
                     # Get
                     else:
@@ -252,7 +252,7 @@ def create_app(config_name):
                 #  Token is not legit so return the error message
                 message = user_id
                 response = jsonify({"Message": message})
-                response.status_code = 401
+                response.status_code = 498
                 return response
 
     @swag_from('docs/Categories_search_get.yml', methods=['GET'])
@@ -264,7 +264,7 @@ def create_app(config_name):
         if auth_header:
             access_token = auth_header
         else:
-            return {"Message": "Please provide an access token"}, 300
+            return {"Message": "Please provide an access token"}, 499
         if access_token:
             user_id = User.decode_token(access_token)
             if not isinstance(user_id, str):
@@ -292,20 +292,20 @@ def create_app(config_name):
                                         'Prev Page': search_result.prev_num,
                                         'Has next':  search_result.has_next,
                                         'Has previous': search_result.has_prev}, result)
-                    response.status_code = 200
+                    response.status_code = 200 if result else 404
                     return response
 
                 else:
                     message = {"Message": "Please provide a search query ex: .../search?q=example"}
                     response = jsonify(message)
-                    response.status_code = 404
+                    response.status_code = 400
                     return response
 
             else:
                 #  Token is not legit so return the error message
                 message = user_id
                 response = jsonify({"Message": message})
-                response.status_code = 401
+                response.status_code = 498
                 return response
 
     @swag_from('docs/Recipes_get.yml', methods=['GET'])
@@ -316,7 +316,7 @@ def create_app(config_name):
         if auth_header:
             access_token = auth_header
         else:
-            return {"Message": "Please provide an access token"}, 300
+            return {"Message": "Please provide an access token"}, 499
         result = []
         if access_token:
             user_id = User.decode_token(access_token)
@@ -360,13 +360,13 @@ def create_app(config_name):
                                 response = jsonify({
                                     "Message": "Please use a shorter name or recipe(description)"
                                 })
-                                response.status_code = 400
+                                response.status_code = 411
                                 return response
                             if validate_illegal_char(name+recipe):  # Validate illegal characters
                                 response = jsonify({
                                     "Message": "Fatal! illegal characters used"
                                 })
-                                response.status_code = 400
+                                response.status_code = 406
                                 return response
                             the_recipes = Recipes(name=name, recipe=recipe, belonging_to=category)
                             the_recipes.save()
@@ -383,15 +383,15 @@ def create_app(config_name):
                                 response.status_code = 201
                                 return response
                         else:
-                            return {"Message": "Please use keys name and recipe (Case sensitive)"}, 203
+                            return {"Message": "Please use keys name and recipe (Case sensitive)"}, 400
                 else:
-                    return {"Message": "Category does not exist"}, 405
+                    return {"Message": "Category does not exist"}, 404
 
             else:
                 #  Token is not legit so return the error message
                 message = user_id
                 response = jsonify({"Message": message})
-                response.status_code = 401
+                response.status_code = 498
                 return response
 
     @swag_from('docs/Recipes_search_get.yml', methods=['GET'])
@@ -403,7 +403,7 @@ def create_app(config_name):
         if auth_header:
             access_token = auth_header
         else:
-            return {"Message": "Please provide an access token"}, 300
+            return {"Message": "Please provide an access token"}, 499
         if access_token:
             user_id = User.decode_token(access_token)
             if not isinstance(user_id, str):
@@ -434,22 +434,22 @@ def create_app(config_name):
                                                 'Prev Page': search_result.prev_num,
                                                 'Has next': search_result.has_next,
                                                 'Has previous': search_result.has_prev}, result)
-                            response.status_code = 200
+                            response.status_code = 200 if result else 404
                             return response
 
                         else:
-                            message = {"Message": "Please provide a search query ex: .../search?q=example"}
+                            message = {"Message": "Please provide a search to query ex: .../search?q=example"}
                             response = jsonify(message)
                             response.status_code = 404
                             return response
                 else:
                     # abort early with an error four oh four if not in found
-                    return {"Message": "Category does not exist"}, 405
+                    return {"Message": "Category does not exist"}, 404
             else:
                 #  Token is not legit so return the error message
                 message = user_id
                 response = jsonify({"Message": message})
-                response.status_code = 401
+                response.status_code = 498
                 return response
 
     @swag_from('docs/Recipe_id_get.yml', methods=['GET'])
@@ -461,7 +461,7 @@ def create_app(config_name):
         if auth_header:
             access_token = auth_header
         else:
-            return {"Message": "Please provide and access token"}, 300
+            return {"Message": "Please provide and access token"}, 499
         if access_token:
             user_id = User.decode_token(access_token)
             if not isinstance(user_id, str):
@@ -485,13 +485,13 @@ def create_app(config_name):
                                     response = jsonify({
                                         "Message": "Please use a shorter name or recipe(description)"
                                     })
-                                    response.status_code = 400
+                                    response.status_code = 411
                                     return response
                                 if validate_illegal_char(name+recipe):  # Validate illegal characters
                                     response = jsonify({
                                         "Message": "Fatal! illegal characters used"
                                     })
-                                    response.status_code = 400
+                                    response.status_code = 406
                                     return response
                                 for the_recipe in current_recipe:
                                     the_recipe.name = name
@@ -506,7 +506,7 @@ def create_app(config_name):
                                     response.status_code = 201
                                     return response
                             else:
-                                return {"Message": "name and recipe cannot be empty (Case sensitive)"}, 203
+                                return {"Message": "name and recipe cannot be empty (Case sensitive)"}, 400
 
                         elif request.method == 'GET':
                             for the_recipe in current_recipe:
@@ -521,12 +521,12 @@ def create_app(config_name):
                     else:
                         return {"Message": "The recipe does not exist"}, 404
                 else:
-                    return {"Message": "The category does not exist"}, 405
+                    return {"Message": "The category does not exist"}, 404
             else:
                 #  Token is not legit so return the error message
                 message = user_id
                 response = jsonify({"Message": message})
-                response.status_code = 401
+                response.status_code = 498
                 return response
 
     from .auth import auth_blueprint

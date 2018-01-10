@@ -35,33 +35,36 @@ class RegistrationView(MethodView):
                     response = jsonify({
                         "Message": "Please use a shorter value"
                     })
-                    response.status_code = 401
+                    response.status_code = 411
                     return response
 
                 if validate_illegal_char(first_name+last_name):
                     response = jsonify({
                         "Message": "Fatal! illegal characters used"
                     })
-                    response.status_code = 401
+                    response.status_code = 406
                     return response
                 if re.match(r'^[a-zA-Z0-9_+.]+@[a-zA-z-]+\.[a-zA-Z-]+$', email):  # validate email
                     if len(password) >= 8:  # validate password
                         existing_user = User.query.filter_by(email=email).first()  # check if the user exists
                         if existing_user:
                             response = {'Message': 'User already exists. Please login'}
-                            return make_response(jsonify(response)), 202
+                            return make_response(jsonify(response)), 406
                         else:  # the user does not exist and should be registered
                             user = User(email=email, password=password, first_name=first_name, last_name=last_name, secret=secret)
                             user.save()
-                            response = {'Message': 'You have successfully registered'}
+                            response = jsonify({'Message': 'You have successfully registered'})
+                            response.status_code = 201
                     else:
-                        response = {'Message': 'Password must be greater than 8'}
+                        response = jsonify({'Message': 'Password must be greater than 8'})
+                        response.status_code = 411
                 else:
-                    response = {'Message': 'Please provide a valid email'}
-                return make_response(jsonify(response)), 201
+                    response = jsonify({'Message': 'Please provide a valid email'})
+                    response.status_code = 400
+                return make_response(response)
             else:
                 response = {"Message": "Please fill out First Name, Last Name, email, password and Secret word (Case Sensitive)"}
-                return make_response(jsonify(response)), 203
+                return make_response(jsonify(response)), 449
         except Exception as e:  #pragma: no cover
             # if error occured returns the error as a message
             return {'Message': str(e)}, 401
@@ -78,7 +81,7 @@ class LoginView(MethodView):
             response = {
                 "Message": "please use keys email and password (Case Sensitive)"
             }
-            return make_response(jsonify(response)), 203
+            return make_response(jsonify(response)), 449
         try:
             #  check if user exists
             user = User.query.filter_by(email=request.data['email'].lower()).first()
@@ -91,10 +94,10 @@ class LoginView(MethodView):
                                 "Access token": access_token.decode()}
                     return make_response(jsonify(response)), 200
                 else:
-                    response = {'Message': 'Password Mismatch. Please try again'}
-                    return make_response(jsonify(response)), 301
+                    response = {'Message': 'Incorrect Email or Password'}
+                    return make_response(jsonify(response)), 401
             else:
-                response = {'Message': 'Email address does not match any. Please try again'}
+                response = {'Message': 'Incorrect Email or Password'}
                 return make_response(jsonify(response)), 401
         except Exception as e:  # pragma: no cover
             #  Create a response with the error message
@@ -113,7 +116,7 @@ class LogoutView(MethodView):
         if auth_header:
             access_token = auth_header
         else:
-            return {"Message": "Please Provide an access token"}, 300
+            return {"Message": "Please Provide an access token"}, 499
         if access_token:
             revoked_token = RevokeToken(revoked_token=access_token)
             revoked_token.save()
@@ -134,7 +137,7 @@ class ResetPasswordView(MethodView):
                 if user.secret == secret:
                     if not len(password) >= 8:
                         response = {'Message': 'Password must be greater than 8'}
-                        return make_response(jsonify(response)), 400
+                        return make_response(jsonify(response)), 411
                     user.password = password
                     user.save()
                     response = {"Message": "Password updated successfully"}
@@ -152,13 +155,13 @@ class ResetPasswordView(MethodView):
                 else:
                     response = {"Message": "Invalid secret word, please try again",
                                 "Instruction" : "type 'send me an email' in the secret word key to recover via email "}
-                    return make_response(jsonify(response)), 400
+                    return make_response(jsonify(response)), 401
             else:
                 response = {"Message": "Please provide a valid email"}
-                return make_response(jsonify(response)), 405
+                return make_response(jsonify(response)), 406
         else:
             response = {"Message": "Please provide your email, Secret word and password (Case Sensitive)"}
-            return make_response(jsonify(response)), 401
+            return make_response(jsonify(response)), 449
 
 
 registration_view = RegistrationView.as_view('register_view')

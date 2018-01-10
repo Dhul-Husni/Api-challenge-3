@@ -88,7 +88,7 @@ class AuthTestCase(unittest.TestCase):
                                                                  'password': 'INVALID PASSWORD'
                                                                  })
         res = json.loads(login_res.data.decode())
-        self.assertEqual(res['Message'], 'Password Mismatch. Please try again')
+        self.assertEqual(res['Message'], 'Incorrect Email or Password')
 
     def test_already_registered(self):
         """Test if user is already registerd"""
@@ -96,7 +96,7 @@ class AuthTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
 
         second_res = self.client().post('/api-1.0/auth/register', data=self.user_data)
-        self.assertEqual(second_res.status_code, 202)
+        self.assertEqual(second_res.status_code, 406)
         result = json.loads(second_res.data.decode())
         self.assertEqual(result['Message'], 'User already exists. Please login')
 
@@ -119,7 +119,7 @@ class AuthTestCase(unittest.TestCase):
         login_res = self.client().post('/api-1.0/auth/login', data=None_exist)
         result = json.loads(login_res.data.decode())
         self.assertEqual(login_res.status_code, 401)
-        self.assertEqual(result['Message'], 'Email address does not match any. Please try again')
+        self.assertEqual(result['Message'], 'Incorrect Email or Password')
 
     def test_user_logout(self):
         """Test user logout"""
