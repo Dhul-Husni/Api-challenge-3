@@ -87,8 +87,8 @@ class ApiTestCase(unittest.TestCase):
                     }
         return self.client().post('/api-1.0/auth/login', data=user_data)
 
-    def test_no_access_token_provided_in_category(self):
-        """Tests if a user does not provide an access token to the endpoints"""
+    def test_PostCategory_NoAccessToken_ShouldRefuse(self):
+        """Tests if a user does not provide an access token to post to a category"""
         res = self.client().post('/api-1.0/categories', data={
             "name": "Sweet pie",
             "detail": "Made by mama"
@@ -96,8 +96,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 300)
         self.assertIn('Please Provide an access token', str(res.data))
 
-    def test_no_access_token_provided_in_category_id(self):
-        """Tests if a user does not provide an access token to the endpoints"""
+    def test_GetCategoryById_NoAccessToken_ShouldRefuse(self):
+        """Tests if a user gets a category by id with no access token provided"""
         res = self.client().get('/api-1.0/categories/1', data={
             "name": "Sweet pie",
             "detail": "Made by mama"
@@ -105,8 +105,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 300)
         self.assertIn('please provide an access token', str(res.data).lower())
 
-    def test_invalid_keys_set_for_category(self):
-        """Test for when user does a post request with invalid keys"""
+    def test_PostCategory_BadItemNames_ShouldReturnException(self):
+        """Test for when user does a post a category with incorrect item names"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -119,8 +119,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 203)
         self.assertIn('please use keys name and detail', str(res.data))
 
-    def test_invalid_keys_for_category_id_put(self):
-        """Test for when user does a put request with invalid keys on category id"""
+    def test_EditCategory_BadItemNames_ShouldReturnException(self):
+        """Test for when user edits a category with incorrect item names"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -140,8 +140,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 203)
         self.assertIn('please use the keys name and detail', str(res.data).lower())
 
-    def test_invalid_or_expired_token_in_get_and_post_category(self):
-        """Test expired or invalid token in get and post category"""
+    def test_PostCategory_InvalidToken_ShouldReturnException(self):
+        """Test posting a category with an invalid token"""
         res = self.client().post('/api-1.0/categories', data={
             "name": "Sweet pie",
             "detail": "Made by mama"
@@ -149,10 +149,10 @@ class ApiTestCase(unittest.TestCase):
                                  headers=dict(Authorization='invalid.token')
                                  )
         self.assertEqual(res.status_code, 401)
-        self.assertIn('invalid' or 'expired', str(res.data).lower())
+        self.assertIn('invalid', str(res.data).lower())
 
-    def test_invalid_or_expired_token_in_get_and_put_delete_category(self):
-        """Test expired or invalid token in edit and delete category by id"""
+    def test_EditCategory_InvalidToken_ShouldReturnException(self):
+        """Test editing a category with an invalid token"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -170,8 +170,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 401)
         self.assertIn('invalid' or 'expired', str(result.data).lower())
 
-    def test_token_based_authentication(self):
-        """Tests if the user is given a token after login"""
+    def test_login_ProvideValidDetails_ShouldReturnToken(self):
+        """Test a valid user is provided with an access token at login"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())
@@ -191,8 +191,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
         self.assertIn('Sweet pie'.title(), str(res.data))
 
-    def test_get_categories_when_empty(self):
-        """Tests when a get all request is made and all categories are empty"""
+    def test_GetCategories_NoCategories_ShouldNotifyUser(self):
+        """Tests when a get all categories request is made and no categories exist"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -202,7 +202,7 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn("Nothing here yet", str(result.data))
 
-    def test_users_can_get_all_categories(self):
+    def test_users_can_get_all_categories(self):  # TODO
         """Test if Api can get All categories"""
         self.register_user()
         result = self.login_user()
@@ -262,7 +262,7 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn('Sweet pie'.title(), str(result.data))
 
-    def test_users_categories_can_be_edited(self):
+    def test_PutCategory_EditACategory_ShouldAcceptEditing(self):
         """Test if Api can edit user categories(Put)"""
         self.register_user()
         result = self.login_user()
@@ -287,8 +287,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIn('Bitter pie'.title(), str(result.data))
 
-    def test_users_categories_can_be_deleted(self):
-        """Tests if Api can delete user categories"""
+    def test_DeleteCategory_DeleteACategory_ShouldAcceptAndDelete(self):
+        """Tests if Api accepts a users request to delete a category"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -308,8 +308,8 @@ class ApiTestCase(unittest.TestCase):
                                 )
         self.assertEqual(res.status_code, 404)
 
-    def test_user_category_recipe_can_be_created(self):
-        """Tests if api can create recipes (post)"""
+    def test_PostRecipe_CreateARecipe_ShouldAcceptAndCreate(self):
+        """Tests if api can create recipes inside a category(post)"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -329,8 +329,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
         self.assertIn('tea spoon'.title(), str(result.data))
 
-    def test_user_category_recipe_with_invalid_token(self):
-        """api should not create recipe with invalid email"""
+    def test_PostRecipe_InvalidToken_ShouldReturnException(self):
+        """Recipes should not be created without a valid Token"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -350,8 +350,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 401)
         self.assertIn("invalid" or 'expired', str(res.data).lower())
 
-    def test_user_category_recipe_can_be_created_with_invalid_keys(self):
-        """Tests if api can create recipes with invalid keys(post)"""
+    def test_PostRecipe_BadItemNames_ShouldReturnException(self):
+        """Tests if api can create recipes with incorrect item names(post)"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -371,7 +371,7 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 203)
         self.assertIn('Please use keys name and recipe', str(result.data))
 
-    def test_user_category_recipe_can_get_recipes(self):
+    def test_GetRecipe_GetARecipe_ShouldReturnRecipe(self):
         """Tests if api can get recipes (get)"""
         self.register_user()
         result = self.login_user()
@@ -397,8 +397,10 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn('tea spoon'.title(), str(result.data))
 
-    def test_user_category_recipe_can_get_recipes_when_empty(self):
-        """Tests if api can get recipes (get)"""
+    def test_GetRecipe_NoRecipesAvailable_ShouldNotifyUser(self):
+        """Test for a get request to an empty category.
+         Should return a message notification Nothing here yet
+        (get)"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -417,8 +419,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn('Nothing here yet', str(result.data))
 
-    def test_user_category_recipe_can_be_edited(self):
-        """Tests if api can edit recipes"""
+    def test_PutRecipe_EditARecipe_ShouldAcceptAndEditRecipe(self):
+        """Tests if api can edit a recipe"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -480,20 +482,20 @@ class ApiTestCase(unittest.TestCase):
         self.assertIn("Made by brother".title(), str(search_result.data))
         self.assertEqual(search_result.status_code, 200)
 
-    def test_user_can_search_through_categories_with_no_token(self):
+    def test_if_user_can_search_through_categories_with_no_token(self):
         """Tests if a user queries a parameter with no token"""
         search_result = self.client().get('/api-1.0/categories/search?q=chicken',)
         self.assertIn("Please provide an access token".lower(), str(search_result.data).lower())
         self.assertEqual(search_result.status_code, 300)
 
-    def test_user_can_search_through_categories_with_invalid_token(self):
+    def test_if_user_can_search_through_categories_with_invalid_token(self):
         """Tests if a user queries a parameter with invalid token"""
         search_result = self.client().get('/api-1.0/categories/search?q=chicken',
                                           headers=dict(Authorization='Invalid.token'))
         self.assertIn("invalid" or "expired", str(search_result.data).lower())
         self.assertEqual(search_result.status_code, 401)
 
-    def test_user_can_search_through_categories_q_not_found(self):
+    def test_Search_NoneExistingData_ShouldReturnNotFound(self):
         """Tests if a user queries a parameter WITH NONE EXISTING DATA"""
         self.register_user()
         result = self.login_user()
@@ -511,8 +513,10 @@ class ApiTestCase(unittest.TestCase):
         self.assertIn("Sorry we could not find what you are looking for", str(search_result.data))
         self.assertEqual(search_result.status_code, 200)
 
-    def test_user_can_search_through_categories_with_q_not_found(self):
-        """Tests if a user does not provide q"""
+    def test_Search_ParamQNotProvided_ShouldReturnException(self):
+        """Tests if a user does not provide the parameter Q
+        Used for searching.
+        """
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -529,8 +533,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertIn("Please provide a search query", str(search_result.data))
         self.assertEqual(search_result.status_code, 404)
 
-    def test_user_category_recipe_can_be_created_with_no_token(self):
-        """Tests if api can create recipes with no token(post)"""
+    def test_PostRecipe_NoTokenProvided_ShouldReturnException(self):
+        """Tests if api can create recipes when no token in headers(post)"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -549,7 +553,7 @@ class ApiTestCase(unittest.TestCase):
         self.assertEqual(result.status_code, 300)
         self.assertIn('Please provide an access token', str(result.data))
 
-    def test_user_can_search_through_recipes_using_get_parameter_q(self):
+    def test_Search_AllValidDataProvided_ShouldReturnItems(self):
         """Tests if a user queries a parameter it returns the closest matching recipe"""
         self.register_user()
         result = self.login_user()
@@ -580,7 +584,7 @@ class ApiTestCase(unittest.TestCase):
         self.assertIn("Made by brother".title(), str(search_result.data))
         self.assertEqual(search_result.status_code, 200)
 
-    def test_user_can_search_through_recipes_using_get_parameter_q_but_no_token(self):
+    def test_Search_NoTokenProvided_ShouldReturnException(self):
         """Tests if a user queries a parameter with no access token"""
         self.register_user()
         result = self.login_user()
@@ -610,8 +614,9 @@ class ApiTestCase(unittest.TestCase):
         self.assertIn("Please provide an access token", str(search_result.data))
         self.assertEqual(search_result.status_code, 300)
 
-    def test_user_can_search_through_recipes_using_get_parameter_q_which_is_none_existen(self):
-        """Tests if a user queries a parameter that does not exist"""
+    def test_Search_DataNotInApi_ShouldReturnNotFound(self):
+        """Tests if a user queries a parameter that does not exist in api
+        """
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -641,8 +646,10 @@ class ApiTestCase(unittest.TestCase):
         self.assertIn("Sorry we could not find what you are looking for", str(search_result.data))
         self.assertEqual(search_result.status_code, 200)
 
-    def test_user_can_search_through_recipes_with_invalid_category(self):
-        """Tests if a user queries a parameter and does not provide a valid category"""
+    def test_Search_UnExistingCategory_ShouldReturnException(self):
+        """Tests searching a None existent Category
+         :returns: Category does not exist
+        """
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -652,7 +659,7 @@ class ApiTestCase(unittest.TestCase):
         self.assertIn("Category does not exist", str(search_result.data))
         self.assertEqual(search_result.status_code, 405)
 
-    def test_user_can_search_through_recipes_using_get_parameter_q_with_invalid_token(self):
+    def test_searchRecipes_InvalidToken_ShouldReturnException(self):
         """Tests if a user queries a recipe with invalid token """
         self.register_user()
         result = self.login_user()
@@ -683,8 +690,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertIn("invalid" or 'expired', str(search_result.data).lower())
         self.assertEqual(search_result.status_code, 401)
 
-    def test_user_can_get_recipes_by_id_with_non_exist_category(self):
-        """Tests if a user can get recipe by id if the category does not exist"""
+    def test_GetRecipes_NoneExitentCategory_ShouldReturnException(self):
+        """Tests if a user can get recipe by id from the category that does not exist"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['Access token']
@@ -698,8 +705,8 @@ class ApiTestCase(unittest.TestCase):
         self.assertIn("The category does not exist", str(result.data))
         self.assertEqual(result.status_code, 405)
 
-    def test_user_can_get_recipes_by_id_with_invalid_token(self):
-        """Tests if a user can get recipe by id if the category does not exist"""
+    def test_GetRecipeById_InvalidToken_ShouldReturnException(self):
+        """Tests if a user can get recipe by id with an invalid token"""
         result = self.client().get('/api-1.0/categories/1/recipes/1', data={
                                                         "name": "Sour pie",
                                                         "recipe": "Made by brother"

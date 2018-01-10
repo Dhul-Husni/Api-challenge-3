@@ -29,9 +29,10 @@ class AuthTestCase(unittest.TestCase):
         self.assertEqual(result['Message'], 'You have successfully registered')
         self.assertEqual(res.status_code, 201)
 
-    def test_invalid_email_registration(self):
+    def test_Registeration_InvalidEmail_ShouldReturnException(self):
         """Makes a post request to the api with invalid email and tests if user
-        will be registered"""
+        will be registered
+        """
         res = self.client().post('/api-1.0/auth/register', data={'First Name': 'Kali',
                                                                  'Last Name': 'Sir3n',
                                                                  'email': 'test@..com',
@@ -42,7 +43,7 @@ class AuthTestCase(unittest.TestCase):
         result = json.loads(res.data.decode())
         self.assertEqual(result['Message'], 'Please provide a valid email')
 
-    def test_user_does_not_provide_all_keys(self):
+    def test_Registeration_ParametersNotProvided_ShouldRefuseRegistration(self):
         """Makes a post request to the api and does not provide keys or maybe the keys are invalid
          tests if user
         will be registered"""
