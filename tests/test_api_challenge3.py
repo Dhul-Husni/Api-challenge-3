@@ -14,7 +14,7 @@ from app import create_app, db
 def db_DropEverything(db):
     # From http://www.sqlalchemy.org/trac/wiki/UsageRecipes/DropEverything
 
-    conn=db.engine.connect()
+    conn = db.engine.connect()
 
     # the transaction only applies if the DB supports
     # transactional DDL, i.e. Postgresql, MS SQL Server
@@ -78,6 +78,14 @@ class ApiTestCase(unittest.TestCase):
                     "Secret word": secret
                     }
         return self.client().post('/api-1.0/auth/register', data=user_data)
+
+    def login_user(self, email='user1234@gmail.com', password='testpassword'):
+        """Implied login. A helper method"""
+        user_data = {
+                    'email': email,
+                    'password': password,
+                    }
+        return self.client().post('/api-1.0/auth/login', data=user_data)
 
     def test_no_access_token_provided_in_category(self):
         """Tests if a user does not provide an access token to the endpoints"""
@@ -168,14 +176,6 @@ class ApiTestCase(unittest.TestCase):
         result = self.login_user()
         access_token = json.loads(result.data.decode())
         self.assertIn('Access token', access_token)
-
-    def login_user(self, email='user1234@gmail.com', password='testpassword'):
-        """Implied login. A helper method"""
-        user_data = {
-                    'email': email,
-                    'password': password,
-                    }
-        return self.client().post('/api-1.0/auth/login', data=user_data)
 
     def test_users_can_create_categories(self):
         """Test if users can create a recipe category(POST)"""

@@ -128,7 +128,7 @@ class ResetPasswordView(MethodView):
         secret = str(request.data.get('Secret word', '')).strip().lower() # Get the secret word
         password = str(request.data.get('password', ''))
         email = str(request.data.get('email', '')).strip().lower()
-        if email and secret and password:
+        if email and secret:
             user = User.query.filter_by(email=email).first()
             if user:
                 if user.secret == secret:

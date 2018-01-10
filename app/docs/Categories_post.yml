@@ -37,7 +37,7 @@ responses:
     description: |
       If the user does not provide an access token
     schema:
-      $ref: "#/definitions/Failed_logout"
+      $ref: "#/definitions/no_access"
 definitions:
   Failed_logout:
     type: "object"
