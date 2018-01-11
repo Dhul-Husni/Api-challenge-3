@@ -34,7 +34,7 @@ class AuthTestCase(unittest.TestCase):
         will be registered
         """
         res = self.client().post('/api-1.0/auth/register', data={'First Name': 'Kali',
-                                                                 'Last Name': 'Sir3n',
+                                                                 'Last Name': 'Siren',
                                                                  'email': 'test@..com',
                                                                  'password': 'Kali2018',
                                                                  'Secret word': 'Kali2018'
@@ -90,20 +90,9 @@ class AuthTestCase(unittest.TestCase):
         res = json.loads(login_res.data.decode())
         self.assertEqual(res['Message'], 'Incorrect Email or Password')
 
-    def test_already_registered(self):
-        """Test if user is already registerd"""
-        res = self.client().post('/api-1.0/auth/register', data=self.user_data)
-        self.assertEqual(res.status_code, 201)
-
-        second_res = self.client().post('/api-1.0/auth/register', data=self.user_data)
-        self.assertEqual(second_res.status_code, 406)
-        result = json.loads(second_res.data.decode())
-        self.assertEqual(result['Message'], 'User already exists. Please login')
-
     def test_user_login(self):
         """Test user login"""
-        res = self.client().post('/api-1.0/auth/register', data=self.user_data)
-        self.assertEqual(res.status_code, 201)
+        self.client().post('/api-1.0/auth/register', data=self.user_data)
         login_res = self.client().post('/api-1.0/auth/login', data=self.user_data)
 
         results = json.loads(login_res.data.decode())
@@ -120,6 +109,15 @@ class AuthTestCase(unittest.TestCase):
         result = json.loads(login_res.data.decode())
         self.assertEqual(login_res.status_code, 401)
         self.assertEqual(result['Message'], 'Incorrect Email or Password')
+
+    def test_already_registered(self):
+        """Test if user is already registerd"""
+        self.client().post('/api-1.0/auth/register', data=self.user_data)
+
+        second_res = self.client().post('/api-1.0/auth/register', data=self.user_data)
+        self.assertEqual(second_res.status_code, 406)
+        result = json.loads(second_res.data.decode())
+        self.assertEqual(result['Message'], 'User already exists. Please login')
 
     def test_user_logout(self):
         """Test user logout"""
@@ -143,8 +141,7 @@ class AuthTestCase(unittest.TestCase):
 
     def test_user_reset_password(self):
         """Test user reset password"""
-        res = self.client().post('/api-1.0/auth/register', data=self.user_data)
-        self.assertEqual(res.status_code, 201)
+        self.client().post('/api-1.0/auth/register', data=self.user_data)
 
         reset_res = self.client().post('/api-1.0/auth/reset-password', data={'password':'NEW PASSWORD',
                                                                              'email':'test@example.com',
@@ -154,8 +151,8 @@ class AuthTestCase(unittest.TestCase):
 
     def test_user_reset_password_with_empty_strings(self):
         """Test user reset password with empty string"""
-        res = self.client().post('/api-1.0/auth/register', data=self.user_data)
-        self.assertEqual(res.status_code, 201)
+        self.client().post('/api-1.0/auth/register', data=self.user_data)
+
         login_res = self.client().post('/api-1.0/auth/login', data=self.user_data)
 
         results = json.loads(login_res.data.decode())

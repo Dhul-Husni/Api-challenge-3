@@ -67,7 +67,7 @@ class ApiTestCase(unittest.TestCase):
         with self.app.app_context():
             db.create_all()
 
-    def register_user(self, first_name='Kali', last_name='sir3n',
+    def register_user(self, first_name='Kali', last_name='siren',
                       email='user1234@gmail.com', password='testpassword', secret='Kali2018'):
         """Implied registration . A helper method"""
         user_data = {
@@ -199,10 +199,10 @@ class ApiTestCase(unittest.TestCase):
         result = self.client().get('/api-1.0/categories',
                                    headers=dict(Authorization=access_token)
                                    )
-        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.status_code, 404)
         self.assertIn("Nothing here yet", str(result.data))
 
-    def test_users_can_get_all_categories(self):  # TODO
+    def test_users_can_get_all_categories(self):
         """Test if Api can get All categories"""
         self.register_user()
         result = self.login_user()

@@ -13,7 +13,6 @@ from flasgger import swag_from
 
 
 
-
 config_name = "development"
 app = create_app(config_name)
 mail = Mail(app)
@@ -32,18 +31,7 @@ class RegistrationView(MethodView):
             last_name = request.data.get('Last Name', '').strip().lower()
             secret = request.data.get('Secret word', '').strip().lower()  # A way to help the user reset password
             if first_name and last_name and email and password and secret:
-                if not re.search(r"^([a-zA-Z]+$)", first_name):
-                    response = jsonify({
-                        "Message": "Fatal! illegal characters used"
-                    })
-                    response.status_code = 406
-                    return response
-                if not re.search(r"(^[a-zA-Z]+$)", last_name):
-                    response = jsonify({
-                        "Message": "Fatal! illegal characters used"
-                    })
-                    response.status_code = 406
-                    return response
+                
                 if len(email) >=80 or len(first_name) >=80 or len(last_name) >= 80 or len(secret)  >= 80:
                     response = jsonify({
                         "Message": "Please use a shorter value"
@@ -51,7 +39,13 @@ class RegistrationView(MethodView):
                     response.status_code = 411
                     return response
 
-                if re.match(r'^[a-zA-Z0-9_+.]+@[a-zA-Z-]+\.[a-zA-Z-]{2,3}$', email):  # validate email
+                if validate_illegal_char(first_name+last_name):
+                    response = jsonify({
+                        "Message": "Fatal! illegal characters used"
+                    })
+                    response.status_code = 406
+                    return response
+                if re.match(r'^[a-zA-Z0-9_+.]+@[a-zA-z-]+\.[a-zA-Z-]{2,3}$', email):  # validate email
                     if len(password) >= 8:  # validate password
                         existing_user = User.query.filter_by(email=email).first()  # check if the user exists
                         if existing_user:
