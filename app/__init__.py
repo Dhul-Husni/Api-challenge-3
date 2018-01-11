@@ -169,7 +169,7 @@ def create_app(config_name):
                                             'Has next': category.has_next,
                                             'Has prev': category.has_prev,
                                             }, {'Message': 'Nothing here yet'})
-                    response.status_code = 200
+                    response.status_code = 200 if result else 404
                     return response
             else:
                 #  Token is not legit so return the error message
@@ -350,7 +350,7 @@ def create_app(config_name):
                                                     'Prev Page': recipe_object.prev_num,
                                                     'Has next': recipe_object.has_next,
                                                     'Has previous': recipe_object.has_prev}, result)
-                                response.status_code = 200
+                                response.status_code = 200 if result else 404
                                 return response
                     elif request.method == 'POST':
                         name = request.data.get('name', '').strip().lower()
