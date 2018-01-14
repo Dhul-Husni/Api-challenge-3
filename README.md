@@ -173,4 +173,4 @@ http://127.0.0.1:5000/categories?q=example
 
 ### Demo and API documentation
 
-[https://api-recipe-challenge.herokuapp.com/](https://api-recipe-challenge.herokuapp.com/)
+[https://api-iris.herokuapp.com/](https://api-recipe-challenge.herokuapp.com/)
