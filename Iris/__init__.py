@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, make_response, render_template
+from flask import Flask, make_response, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flasgger import Swagger
 
@@ -16,7 +16,7 @@ def create_app(config_name):
 
     @app.route('/')
     def docs():
-        return make_response(render_template('index.html'))
+        return redirect('apidocs')
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('configurations/config.py')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
