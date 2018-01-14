@@ -1,6 +1,6 @@
 # Api-challenge-3
-[![Build Status](https://travis-ci.org/sir3n-sn/Api-challenge-3.svg?branch=master)](https://travis-ci.org/sir3n-sn/Api-challenge-3)
-[![Coverage Status](https://coveralls.io/repos/github/sir3n-sn/Api-challenge-3/badge.svg?branch=master&service=github)](https://coveralls.io/github/sir3n-sn/Api-challenge-3?branch=development)
+[![Build Status](https://travis-ci.org/sir3n-sn/Api-challenge-3.svg?branch=master)](https://travis-ci.org/sir3n-sn/Api-challenge-3&service=github)
+[![Coverage Status](https://coveralls.io/repos/github/sir3n-sn/Api-challenge-3/badge.svg?branch=master&service=github)](https://coveralls.io/github/sir3n-sn/Api-challenge-3?branch=master&service=github)
 
 **Recipe Api:** version 1.0
 

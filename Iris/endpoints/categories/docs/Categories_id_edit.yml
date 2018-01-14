@@ -1,0 +1,122 @@
+"Edit a category.
+Uses Standard method PUT with status code 200 <OK> "
+---
+tags:
+- "Categories"
+description: "Functionalities (PUT) and responses from the categories endpoint "
+summary: "Functionalities (PUT) and responses from the categories endpoint "
+operationId: "edit Category by id"
+consumes:
+  - "application/json"
+produces:
+- "application/json"
+security:
+  - TokenHeader: []
+parameters:
+-   description: "Details needed during adding category"
+    in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/add_category"
+-   name: "id"
+    in: "path"
+    description: "ID of Category to return"
+    required: true
+    type: "integer"
+    format: "int64"
+responses:
+  200:
+    description: |
+      "Recipe category has been successfully changed"
+    schema:
+      $ref: "#/definitions/successfully_get_categories"
+  400:
+    description: |
+      If the user does not fill out the parameter name and detail
+    schema:
+      $ref: "#/definitions/Failed_category_post"
+
+  499:
+    description: |
+      If the user does not provide an access token
+    schema:
+      $ref: "#/definitions/no_access"
+  498:
+    description: |
+      If the user provided a token that does not exist or a token that is expired. The error message is returned in this case
+    schema:
+      $ref: "#/definitions/Failed_get_category"
+
+  404:
+    description: |
+      The category does not exist
+    schema:
+      $ref: "#/definitions/Category_does_not_exist"
+definitions:
+  Failed_logout:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Please Provide an access token'
+
+
+
+  # categories
+
+  successfully_get_categories:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        default: 1
+
+
+      Recipe Category Name:
+        type: "string"
+        default: "Pastries"
+
+      Recipe Category Detail:
+        type: "string"
+        default: "Cakes, Donuts, etc"
+
+      Date Created:
+        type: "string"
+        default: "12-10-2018 4:32 PM"
+
+      Date Modified:
+        type: "string"
+        default: "12-27-2018 15:32"
+
+  Failed_get_category:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: '<Message containing the error>'
+
+  add_category:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        default: 'Pastries'
+      detail:
+        type: "string"
+        default: 'Cakes, Pasta, etc'
+
+  Failed_category_post:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'please use keys name and detail'
+
+  Category_does_not_exist:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'The category does not exist, Would you like to create one?'
+

@@ -12,7 +12,6 @@ install:
 before_script:
   - psql -c 'CREATE DATABASE test_db;' -U postgres
   - psql -c 'CREATE DATABASE challenge_3_api;' -U postgres
-  - sh challenge.sh
 
 script:
   - nosetests --exe --with-coverage --cover-package=app

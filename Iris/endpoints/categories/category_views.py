@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask import make_response, request, jsonify
-
+from flasgger import swag_from
 from . import category_blueprint
 from Iris.models.category_model import RecipeCategory
 from Iris.handlers.token_handler import assert_token
@@ -12,6 +12,7 @@ class CategoryPostView(MethodView):
     """This class handles requests on category endpoint
     """
     @staticmethod
+    @swag_from("docs/Categories_post.yml", methods=['POST'])
     def post():
         """
         Handles url route /api-2.0/categories with method post
@@ -42,6 +43,7 @@ class CategoryGetView(MethodView):
     :returns: 200 <ok>
     """
     @staticmethod
+    @swag_from("docs/Categories_get.yml", methods=['GET'])
     def get():
         user_id = assert_token(request)
         page, per_page = assert_pagination(request)
@@ -76,6 +78,7 @@ class CategoryIdGetView(MethodView):
     :returns: 200 <ok>
     """
     @staticmethod
+    @swag_from("docs/Category_id_get.yml", methods=['GET'])
     def get(id):
         # retrieve a category by it's id
         user_id = assert_token(request)
@@ -98,6 +101,7 @@ class CategoryPutView(MethodView):
     :returns: 200 <0k>
     """
     @staticmethod
+    @swag_from("docs/Categories_id_edit.yml", methods=['PUT'])
     def put(id):
         user_id = assert_token(request)
         name, detail = assert_category(request)
@@ -128,6 +132,7 @@ class CategoryPutView(MethodView):
 class CategoryDeleteView(MethodView):
 
     @staticmethod
+    @swag_from("docs/Categories_id_delete.yml", methods=['DELETE'])
     def delete(id):
         user_id = assert_token(request)
         category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=id).first()

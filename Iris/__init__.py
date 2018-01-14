@@ -1,7 +1,8 @@
 import os
 
-from flask import Flask
+from flask import Flask, make_response, render_template
 from flask_sqlalchemy import SQLAlchemy
+from flasgger import Swagger
 
 from Iris.configurations.config import app_config
 from Iris.handlers.error_handler import JsonExceptionHandler
@@ -12,6 +13,10 @@ db = SQLAlchemy()
 
 def create_app(config_name):
     app = Flask(__name__)
+
+    @app.route('/')
+    def docs():
+        return make_response(render_template('index.html'))
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('configurations/config.py')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -27,6 +32,52 @@ def create_app(config_name):
     app.register_blueprint(category_blueprint)
     app.register_blueprint(recipe_blueprint)
     app.register_blueprint(search_blueprint)
-
     JsonExceptionHandler(app)
+
+    app.config['SWAGGER'] = {
+        "swagger": "2.0",
+        "title": "iRis",
+        "description": "**Powered** by **Flask!** \
+            \n###THIS API GIVES YOU POWER TO:\
+            \n + Register, login and manage their account. \
+            \n + Create, update, view and delete a category. \
+            \n + Add, update, view or delete recipes. \
+            \n + Enable logging of data manipulation timestamps. ",
+        "termsOfService": "https://opensource.org/ToS",
+        "version": "0.0.1",
+        "contact": {
+            "email": "Thalkifly.hassan@andela.com",
+            "license": {
+                "name": "Apache 2.0",
+                "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+            }
+        },
+        "schemes": [
+            "http",
+            "https"
+        ],
+        "host": "api-recipe-challenge.herokuapp.com",
+        "securityDefinitions": {
+            "TokenHeader": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        },
+        "tags": [
+            {
+                "name": "auth",
+                "description": "All functionality about authention of the user"
+            },
+            {
+                "name": "Categories",
+                "description": "All functionality on the categories endpoint"
+            },
+            {
+                "name": "Recipes",
+                "description": "All functionality on the Recipes endpoint"
+            }
+        ]
+    }
+    Swagger(app)
     return app

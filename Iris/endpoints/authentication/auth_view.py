@@ -2,6 +2,8 @@ import os
 
 from . import auth_blueprint
 from flask.views import MethodView
+from flasgger import swag_from
+
 from flask import Flask
 from flask_mail import Mail
 from flask_mail import Message
@@ -27,6 +29,7 @@ mail = Mail(app)
 class RegistrationView(MethodView):
     """This class handles user registration"""
     @staticmethod
+    @swag_from("docs/Register_user.yml", methods=['POST'])
     def post():
         """Handles post requests from this url /auth/register"""
         first_name, last_name, email, password, secret = auth_handler.assert_registration(request)
@@ -44,6 +47,7 @@ class RegistrationView(MethodView):
 class LoginView(MethodView):
     """Handles user login"""
     @staticmethod
+    @swag_from("docs/Login.yml", methods=['POST'])
     def post():
         """Handles post requests to this url /auth/login"""
         email, password = auth_handler.assert_login(request)
@@ -65,6 +69,7 @@ class LoginView(MethodView):
 class LogoutView(MethodView):
     """Handles user logout"""
     @staticmethod
+    @swag_from("docs/Logout.yml", methods=['POST'])
     def post():
         # Get the access token from the header
         access_token = request.headers.get('Authorization')
@@ -79,6 +84,7 @@ class LogoutView(MethodView):
 class ResetPasswordView(MethodView):
     """Handles reset password"""
     @staticmethod
+    @swag_from("docs/Reset_password.yml", methods=['POST'])
     def post():
         email, secret, password = auth_handler.assert_reset(request)
         user = User.query.filter_by(email=email).first()

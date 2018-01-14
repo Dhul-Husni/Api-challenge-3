@@ -1,0 +1,120 @@
+"Create Recipes inside a Category.
+Users can create recipes inside categories by doing a post request on the endpoint (Authorization is required)
+Returns a standard 201 Created status code"
+---
+tags:
+- "Recipes"
+description: "Functionalities (POST) and responses from the Recipes endpoint "
+summary: "Functionalities (POST) and responses from the Recipes endpoint "
+operationId: "Create a Recipe"
+consumes:
+  - "application/json"
+produces:
+- "application/json"
+security:
+  - TokenHeader: []
+parameters:
+-   name: "id"
+    in: "path"
+    description: "ID of Category to return"
+    required: true
+    type: "integer"
+    format: "int64"
+
+-   description: "Details needed during adding a recipe inside a category"
+    in: "body"
+    name: "body"
+    required: true
+    schema:
+      $ref: "#/definitions/add_recipe"
+
+responses:
+  201:
+    description: |
+      "Recipe categories have been added successfully"
+    schema:
+      $ref: "#/definitions/successfully_get_recipes"
+  400:
+    description: |
+      If the user does not fill out the parameter name and detail
+    schema:
+      $ref: "#/definitions/Failed_recipe_post"
+  498:
+    description: |
+      If the user provided a token that does not exist or a token that is expired. The error message is returned in this case
+    schema:
+      $ref: "#/definitions/Failed_get_category"
+  499:
+    description: |
+      If the user does not provide an access token
+    schema:
+      $ref: "#/definitions/No_accesstoken_provided"
+  404:
+    description: |
+      If the recipe category does not exist
+    schema:
+      $ref: "#/definitions/None_exist_category"
+definitions:
+  No_accesstoken_provided:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Please Provide an access token'
+  # categories
+
+  successfully_get_recipes:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        default: 1
+
+
+      Name:
+        type: "string"
+        default: "Chocolate cake"
+
+      Recipe:
+        type: "string"
+        default: "Bake for two hours in oven. Blah blah blah and voila! COOKED!!"
+
+      Date Created:
+        type: "string"
+        default: "12-10-2018 4:32 PM"
+
+      Date Modified:
+        type: "string"
+        default: "12-27-2018 15:32"
+
+  add_recipe:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        default: 'Chocolate Cake'
+      recipe:
+        type: "string"
+        default: 'Bake for two hours in oven. Blah blah blah and voila! COOKED!!"'
+
+  Failed_category_post:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Please use keys name and recipe'
+
+  Failed_get_category:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: '<Message containing the error>'
+
+  None_exist_category:
+    type: "object"
+    properties:
+      Message:
+        type: "string"
+        default: 'Category does not exist'
+

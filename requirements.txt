@@ -4,5 +4,6 @@ flask-script
 psycopg2
 PyJWT
 coverage
+flasgger
 coveralls
 flask-mail==0.9.0

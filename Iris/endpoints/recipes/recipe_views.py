@@ -5,7 +5,7 @@ from flask.views import MethodView
 from flask import jsonify, request, make_response
 
 from . import recipe_blueprint
-from Iris.endpoints.authentication.auth_view import base_url
+from flasgger import swag_from
 from Iris.models.category_model import RecipeCategory
 from Iris.models.recipe_model import Recipes
 from Iris.handlers.token_handler import assert_token
@@ -18,6 +18,7 @@ class RecipesGetView(MethodView):
     Handles get request to endpoint /recipes
     """
     @staticmethod
+    @swag_from("docs/Recipes_get.yml", methods=['GET'])
     def get(id):
         user_id = assert_token(request)
         page, per_page = assert_pagination(request)
@@ -51,6 +52,7 @@ class RecipesIdGetView(MethodView):
     Handles get by id in endpoint /recipes
     """
     @staticmethod
+    @swag_from("docs/Recipe_id_get.yml", methods=['GET'])
     def get(category_id, recipe_id):
         user_id = assert_token(request)
         my_recipe = assert_recipe_exists(user_id, category_id, recipe_id)
@@ -69,6 +71,7 @@ class RecipesPostView(MethodView):
     Handles post request to endpoint /recipes
     """
     @staticmethod
+    @swag_from("docs/Recipes_post.yml", methods=['POST'])
     def post(id):
         user_id = assert_token(request)
         name, recipe = assert_recipe(request)
@@ -101,6 +104,7 @@ class RecipesPutView(MethodView):
     Handles edit request to endpoint /recipes
     """
     @staticmethod
+    @swag_from("docs/Recipes_id_edit.yml", methods=['PUT'])
     def put(category_id, recipe_id):
         user_id = assert_token(request)
         my_recipe = assert_recipe_exists(user_id, category_id, recipe_id)
@@ -129,6 +133,7 @@ class RecipeDeleteView(MethodView):
     Handles delete request to endpoint /recipes
     """
     @staticmethod
+    @swag_from("docs/Recipes_id_delete.yml", methods=['DELETE'])
     def delete(category_id, recipe_id):
         user_id = assert_token(request)
         my_recipe = assert_recipe_exists(user_id, category_id, recipe_id)

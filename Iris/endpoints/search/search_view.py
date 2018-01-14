@@ -3,8 +3,7 @@ Handles search
 """
 from flask.views import MethodView
 from flask import make_response, request, jsonify
-from sqlalchemy import or_
-from Iris import db
+from flasgger import swag_from
 
 from . import search_blueprint
 from Iris.handlers.token_handler import assert_token
@@ -20,6 +19,7 @@ class SearchCategory(MethodView):
     """This searches the category for items with similar or equal names to the get
     parameter q"""
     @staticmethod
+    @swag_from("docs/Categories_search_get.yml", methods=['GET'])
     def get():
         user_id = assert_token(request)
         page, per_page = assert_pagination(request)
@@ -52,6 +52,7 @@ class SearchRecipe(MethodView):
     This searches the recipes database for items similar or equal and returns them
     """
     @staticmethod
+    @swag_from("docs/Recipes_search_get.yml", methods=['GET'])
     def get(id):
         """This searches the recipes for items with similar or equal names to the get
         parameter q"""
