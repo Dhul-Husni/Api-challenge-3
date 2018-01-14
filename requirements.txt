@@ -1,11 +1,8 @@
 flask
-flask-api
 flask-migrate
 flask-script
 psycopg2
 PyJWT
-flasgger
-flask-heroku
 coverage
 coveralls
 flask-mail==0.9.0
