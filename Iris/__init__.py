@@ -44,7 +44,7 @@ def create_app(config_name):
             \n + Add, update, view or delete recipes. \
             \n + Enable logging of data manipulation timestamps. ",
         "termsOfService": "https://opensource.org/ToS",
-        "version": "0.0.1",
+        "version": "2.0",
         "contact": {
             "email": "Thalkifly.hassan@andela.com",
             "license": {
@@ -56,7 +56,7 @@ def create_app(config_name):
             "http",
             "https"
         ],
-        "host": "api-recipe-challenge.herokuapp.com",
+        "host": "api-iris.herokuapp.com",
         "securityDefinitions": {
             "TokenHeader": {
                 "type": "apiKey",
