@@ -14,9 +14,6 @@ db = SQLAlchemy()
 def create_app(config_name):
     iris = Flask(__name__)
 
-    @iris.route('/')
-    def docs():
-        return redirect('apidocs')
     iris.config.from_object(app_config[config_name])
     iris.config.from_pyfile('configurations/config.py')
     iris.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -80,4 +77,9 @@ def create_app(config_name):
         ]
     }
     Swagger(iris)
+
+    @iris.route('/')
+    def docs():
+        return redirect('apidocs')
+
     return iris
