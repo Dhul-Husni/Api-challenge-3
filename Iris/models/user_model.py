@@ -3,7 +3,7 @@ from datetime import timedelta, datetime
 from werkzeug.security import generate_password_hash
 import jwt
 
-from iris import db
+from Iris import db
 from .token_model import RevokedTokens
 
 

@@ -4,8 +4,8 @@ from flask import Flask, make_response, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flasgger import Swagger
 
-from iris.configurations.config import app_config
-from iris.handlers.error_handler import JsonExceptionHandler
+from Iris.configurations.config import app_config
+from Iris.handlers.error_handler import JsonExceptionHandler
 
 
 db = SQLAlchemy()

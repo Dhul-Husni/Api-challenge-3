@@ -1,6 +1,6 @@
 import os
 
-from iris import create_app
+from Iris import create_app
 
 # config_name = os.getenv('APP_SETTINGS')
 config_name = "development"

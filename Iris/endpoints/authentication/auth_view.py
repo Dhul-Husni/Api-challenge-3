@@ -9,10 +9,10 @@ from flask_mail import Mail
 from flask_mail import Message
 from flask import make_response, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
-from iris.models.user_model import User
-from iris.models.token_model import RevokedTokens
+from Iris.models.user_model import User
+from Iris.models.token_model import RevokedTokens
 
-from iris.handlers import auth_handler
+from Iris.handlers import auth_handler
 
 iris = Flask(__name__)
 iris.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

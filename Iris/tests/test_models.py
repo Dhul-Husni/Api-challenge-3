@@ -3,7 +3,7 @@ TestCase for Model
 """
 import unittest
 
-from iris.models.user_model import User
+from Iris.models.user_model import User
 
 
 class ApiTestModels(unittest.TestCase):

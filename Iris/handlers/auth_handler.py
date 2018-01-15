@@ -4,7 +4,7 @@ Handles authentication on the api
 import re
 
 from werkzeug.exceptions import HTTPException
-from iris.handlers.category_handler import IllegalCategoryName, LongCategoryName
+from Iris.handlers.category_handler import IllegalCategoryName, LongCategoryName
 
 
 class NamesNotProvided(HTTPException):

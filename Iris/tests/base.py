@@ -2,7 +2,7 @@
 Base test case for all tests
 """
 import unittest
-from iris import create_app, db
+from Iris import create_app, db
 import json
 from sqlalchemy.engine import reflection
 from sqlalchemy.schema import (

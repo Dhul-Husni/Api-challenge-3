@@ -1,7 +1,7 @@
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
-from iris import db, create_app
+from Iris import db, create_app
 
 
 iris = create_app("development")

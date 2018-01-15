@@ -3,7 +3,7 @@ TestCase for enpoint /recipes
 """
 import json
 
-from iris.tests import base
+from Iris.tests import base
 
 
 class RecipeTestCase(base.BaseApiTestCase):
@@ -209,7 +209,7 @@ class RecipeTestCase(base.BaseApiTestCase):
                                                         },
                                    headers=dict(Authorization=access_token)
                                    )
-        self.assertIn("This page does not exist on iris", str(result.data))
+        self.assertIn("This page does not exist on Iris", str(result.data))
         self.assertEqual(result.status_code, 404)
 
     def test_get_recipe_by_id_invalid_token_should_return_exception(self):

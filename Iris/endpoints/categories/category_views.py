@@ -2,10 +2,10 @@ from flask.views import MethodView
 from flask import make_response, request, jsonify
 from flasgger import swag_from
 from . import category_blueprint
-from iris.models.category_model import RecipeCategory
-from iris.handlers.token_handler import assert_token
-from iris.handlers.category_handler import assert_category
-from iris.handlers.pagination_handler import assert_pagination
+from Iris.models.category_model import RecipeCategory
+from Iris.handlers.token_handler import assert_token
+from Iris.handlers.category_handler import assert_category
+from Iris.handlers.pagination_handler import assert_pagination
 
 
 class CategoryPostView(MethodView):

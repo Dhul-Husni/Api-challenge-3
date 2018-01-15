@@ -1,7 +1,7 @@
 """
 Handles token validation
 """
-from iris.models.user_model import User
+from Iris.models.user_model import User
 from werkzeug.exceptions import HTTPException
 
 
