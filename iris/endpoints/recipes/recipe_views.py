@@ -6,11 +6,11 @@ from flask import jsonify, request, make_response
 
 from . import recipe_blueprint
 from flasgger import swag_from
-from Iris.models.category_model import RecipeCategory
-from Iris.models.recipe_model import Recipes
-from Iris.handlers.token_handler import assert_token
-from Iris.handlers.pagination_handler import assert_pagination
-from Iris.handlers.recipes_handler import assert_recipe, assert_recipe_exists, RecipeAlreadyExists
+from iris.models.category_model import RecipeCategory
+from iris.models.recipe_model import Recipes
+from iris.handlers.token_handler import assert_token
+from iris.handlers.pagination_handler import assert_pagination
+from iris.handlers.recipes_handler import assert_recipe, assert_recipe_exists, RecipeAlreadyExists
 
 
 class RecipesGetView(MethodView):

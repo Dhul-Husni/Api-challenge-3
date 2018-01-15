@@ -6,11 +6,11 @@ from flask import make_response, request, jsonify
 from flasgger import swag_from
 
 from . import search_blueprint
-from Iris.handlers.token_handler import assert_token
-from Iris.handlers.pagination_handler import assert_pagination
-from Iris.handlers.search_handler import assert_search
-from Iris.handlers.recipes_handler import RecipeDoesNotExist
-from Iris.models.category_model import RecipeCategory
+from iris.handlers.token_handler import assert_token
+from iris.handlers.pagination_handler import assert_pagination
+from iris.handlers.search_handler import assert_search
+from iris.handlers.recipes_handler import RecipeDoesNotExist
+from iris.models.category_model import RecipeCategory
 
 four_oh_four = {"Message": "Sorry we could not find what you are looking for"}
 

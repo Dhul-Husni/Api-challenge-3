@@ -2,7 +2,7 @@
 Base test case for all tests
 """
 import unittest
-from Iris import create_app, db
+from iris import create_app, db
 import json
 from sqlalchemy.engine import reflection
 from sqlalchemy.schema import (
@@ -59,8 +59,8 @@ class BaseApiTestCase(unittest.TestCase):
     Setup
     """
     def setUp(self):
-        self.app = create_app('testing')
-        self.client = self.app.test_client
+        self.iris = create_app('testing')
+        self.client = self.iris.test_client
         self.user_data = {
             'First Name': 'Kali',
             'Last Name': 'Siren',
@@ -68,14 +68,14 @@ class BaseApiTestCase(unittest.TestCase):
             'password': 'test_password',
             'Secret word':'Kali2018'
         }
-        with self.app.app_context():
+        with self.iris.app_context():
             db.session.close()
             db.drop_all()
             db.create_all()
 
     def tearDown(self):
         """Tear down all initialized variables"""
-        with self.app.app_context():
+        with self.iris.app_context():
             db.session.remove()
             db_DropEverything(db)
 

@@ -9,21 +9,21 @@ from flask_mail import Mail
 from flask_mail import Message
 from flask import make_response, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
-from Iris.models.user_model import User
-from Iris.models.token_model import RevokedTokens
+from iris.models.user_model import User
+from iris.models.token_model import RevokedTokens
 
-from Iris.handlers import auth_handler
+from iris.handlers import auth_handler
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = os.environ.get('secret_key')
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app)
+iris = Flask(__name__)
+iris.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+iris.secret_key = os.environ.get('secret_key')
+iris.config['MAIL_SERVER'] = 'smtp.gmail.com'
+iris.config['MAIL_PORT'] = 465
+iris.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+iris.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+iris.config['MAIL_USE_TLS'] = False
+iris.config['MAIL_USE_SSL'] = True
+mail = Mail(iris)
 
 
 class RegistrationView(MethodView):

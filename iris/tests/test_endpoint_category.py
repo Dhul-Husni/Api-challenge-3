@@ -3,7 +3,7 @@ TestCase for endpoint /categories
 """
 import json
 
-from Iris.tests import base
+from iris.tests import base
 
 
 class CategoryTestCase(base.BaseApiTestCase):
@@ -398,5 +398,5 @@ class CategoryTestCase(base.BaseApiTestCase):
         search_result = self.client().get('/v2/categories/1/recipes/search?q=stuff',
                                           headers=dict(Authorization=access_token)
                                           )
-        self.assertIn("This page does not exist on Iris", str(search_result.data))
+        self.assertIn("This page does not exist on iris", str(search_result.data))
         self.assertEqual(search_result.status_code, 404)

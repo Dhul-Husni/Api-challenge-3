@@ -1,4 +1,4 @@
-from Iris import db
+from iris import db
 
 
 class RevokedTokens(db.Model):

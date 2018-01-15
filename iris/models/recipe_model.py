@@ -1,16 +1,14 @@
-from Iris import db
-from .user_model import User
+from iris import db
 
 
-class RecipeCategory(db.Model):
-    """ORM table to store recipe category
+class Recipes(db.Model):
+    """Models the recipe table
     """
-    __tablename__ = 'categories'
+    __tablename__ = 'recipes'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    detail = db.Column(db.String(100))
-    created_by = db.Column(db.Integer, db.ForeignKey(User.id))
-    recipes = db.relationship('Recipes', backref='belonging_to', cascade="all, delete-orphan", lazy='dynamic')
+    name = db.Column(db.String(50), nullable=False)
+    recipe = db.Column(db.Text)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
                               onupdate=db.func.current_timestamp())
@@ -22,6 +20,7 @@ class RecipeCategory(db.Model):
     def delete(self):  # pragma: no cover
         db.session.delete(self)
         db.session.commit()
+        return "Success"
 
     def __repr__(self):
-        return "<Categories:{}>".format(self.name)
+        return "<Recipe name:{} Recipe:{}>".format(self.name, self.recipe)

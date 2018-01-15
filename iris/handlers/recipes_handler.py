@@ -6,7 +6,7 @@ import re
 
 from werkzeug.exceptions import HTTPException
 
-from Iris.models.category_model import RecipeCategory
+from iris.models.category_model import RecipeCategory
 
 pattern = r'[a-zA-Z\s",_-]+'
 
@@ -44,7 +44,7 @@ class RecipeDoesNotExist(HTTPException):
     :raises: Recipe does not exist
     """
     def __init__(self):
-        HTTPException.__init__(self, "This page does not exist on Iris")
+        HTTPException.__init__(self, "This page does not exist on iris")
         self.code = 404
 
 

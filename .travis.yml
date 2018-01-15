@@ -14,7 +14,7 @@ before_script:
   - psql -c 'CREATE DATABASE challenge_3_api;' -U postgres
 
 script:
-  - nosetests --exe --with-coverage --cover-package=Iris
+  - nosetests --exe --with-coverage --cover-package=iris
   - coveralls
 
 after_script:

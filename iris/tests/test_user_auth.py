@@ -4,7 +4,7 @@ from datetime import timedelta, datetime
 import time
 
 import jwt
-from Iris.tests import base
+from iris.tests import base
 
 
 class AuthTestCase(base.BaseApiTestCase):
