@@ -33,9 +33,8 @@ class CategoryPostView(MethodView):
             })
             return make_response(response), 201
         else:
-            response = jsonify({'Message': 'Category already exists'})
+            response = jsonify({'message': 'Category already exists'})
             return make_response(response), 400
-
 
 class CategoryGetView(MethodView):
     """
@@ -68,7 +67,7 @@ class CategoryGetView(MethodView):
                                 'Prev page': category.prev_num,
                                 'Has next': category.has_next,
                                 'Has prev': category.has_prev,
-                                }, {'Message': 'Nothing here yet'})
+                                }, {'message': 'Nothing here yet'})
         return make_response(response), 200 if result else 404
 
 
@@ -92,7 +91,7 @@ class CategoryIdGetView(MethodView):
                     "Date Modified": category.date_modified
                 })
             return make_response(response), 200
-        return make_response(jsonify({"Message": "The category does not exist, Would you like to create one?"})), 404
+        return make_response(jsonify({"message": "The category does not exist, Would you like to create one?"})), 404
 
 
 class CategoryPutView(MethodView):
@@ -121,12 +120,12 @@ class CategoryPutView(MethodView):
 
                 })
                 return make_response(response), 200
-            response = jsonify({'Message': 'Category already exists'})
+            response = jsonify({'message': 'Category already exists'})
             return make_response(response), 400
 
         else:
             # abort early with an error four oh four if not in found
-            return make_response(jsonify({"Message": "The category does not exist, Would you like to create one?"})), 404
+            return make_response(jsonify({"message": "The category does not exist, Would you like to create one?"})), 404
 
 
 class CategoryDeleteView(MethodView):
@@ -139,12 +138,12 @@ class CategoryDeleteView(MethodView):
         if category:
             category.delete()
             return make_response(jsonify({
-                       "Message": 'Category {} was deleted successfully'.format(category.id)
+                       "message": 'Category {} was deleted successfully'.format(category.id)
 
                    })), 200
         else:
             # abort early with an error four oh four if not in found
-            return make_response(jsonify({"Message": "The category does not exist, Would you like to create one?"})), 404
+            return make_response(jsonify({"message": "The category does not exist, Would you like to create one?"})), 404
 
 
 base_url = '/v2/'

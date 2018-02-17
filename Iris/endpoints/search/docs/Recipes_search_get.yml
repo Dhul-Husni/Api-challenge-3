@@ -74,7 +74,7 @@ definitions:
   No_accesstoken_provided:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Please Provide an access token'
 
@@ -107,27 +107,27 @@ definitions:
   Failed_get_category:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
-        default: '<Message containing the error>'
+        default: '<message containing the error>'
 
   Empty_search_query:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Please provide a search query'
 
   Empty_search_recipe:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Sorry we could not find what you are looking for'
 
   None_exist_category:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Category does not exist'

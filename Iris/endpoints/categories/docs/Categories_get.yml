@@ -6,20 +6,20 @@ consumes:
 definitions:
   Failed_category_post:
     properties:
-      Message:
+      message:
         default: "please use keys name and detail"
         type: string
     type: object
   no_access:
     properties:
-      Message:
+      message:
         default: "Please Provide an access token"
         type: string
     type: object
   Failed_get_category:
     properties:
-      Message:
-        default: "<Message containing the error>"
+      message:
+        default: "<message containing the error>"
         type: string
     type: object
   add_category:

@@ -35,12 +35,12 @@ class RegistrationView(MethodView):
         first_name, last_name, email, password, secret = auth_handler.assert_registration(request)
         existing_user = User.query.filter_by(email=email).first()  # checks if the user exists
         if existing_user:
-            response = {'Message': 'User already exists. Please login'}
+            response = {'message': 'User already exists. Please login'}
             return make_response(jsonify(response)), 406
         else:
             user = User(email=email, password=password, first_name=first_name, last_name=last_name, secret=secret)
             user.save()
-            response = {'Message': 'You have successfully registered'}
+            response = {'message': 'You have successfully registered'}
             return make_response(jsonify(response)), 201
 
 
@@ -57,12 +57,13 @@ class LoginView(MethodView):
             if not login:
                 raise ValueError
         except (ValueError, AttributeError):
-            response = {'Message': 'Incorrect Email or Password'}
+            response = {'message': 'Incorrect Email or Password'}
             return make_response(jsonify(response)), 401
         else:
             access_token = user.generate_token(user.id)
-            response = {'Message': 'You have successfully logged in',
-                        "Access token": access_token.decode()}
+            response = {'message': 'You have successfully logged in',
+                        "Access token": access_token.decode(),
+                        'email': email}
             return make_response(jsonify(response)), 200
 
 
@@ -74,10 +75,10 @@ class LogoutView(MethodView):
         # Get the access token from the header
         access_token = request.headers.get('Authorization')
         if not access_token:
-            return make_response(jsonify({"Message": "Please Provide an access token"})), 499
+            return make_response(jsonify({"message": "Please Provide an access token"})), 499
         revoked_token = RevokedTokens(revoked_token=access_token)
         revoked_token.save()
-        response = {"Message": "You have successfully logged out"}
+        response = {"message": "You have successfully logged out"}
         return make_response(jsonify(response)), 200
 
 
@@ -99,14 +100,14 @@ class ResetPasswordView(MethodView):
                            + '</p>' + '<p>Please use it to reset your password.\
                            </p> <p>If you did not request for this message please ignore</p>'
                 mail.send(msg)
-                response = {"Message": "A reset value has been sent with instructions via the email provided."}
+                response = {"message": "A reset value has been sent with instructions via the email provided."}
                 return make_response(jsonify(response)), 200
         except (ValueError, AttributeError):
             raise auth_handler.InvalidSecretKey
         else:
             user.password = password
             user.save()
-            response = {"Message": "Password updated successfully"}
+            response = {"message": "Password updated successfully"}
             return make_response(jsonify(response)), 201
 
 

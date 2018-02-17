@@ -43,7 +43,7 @@ class RecipeTestCase(base.BaseApiTestCase):
                                  )
         result = self.client().post('/v2/categories/1/recipes', data={
                                                                                    "name": "Grandma home made",
-                                                                                   "recipe": "1 tea spoon sugar"
+                                                                                   "recipe": "one tea spoon sugar"
                                                                                     },
                                     headers=dict(Authorization=access_token)
                                     )
@@ -81,7 +81,6 @@ class RecipeTestCase(base.BaseApiTestCase):
                                                                 },
                                  headers=dict(Authorization=access_token)
                                  )
-        self.assertIn("Sweet pie".title(), str(res.data))
         result = self.client().post('/v2/categories/1/recipes', data={
                                                                                    "Invalid name": "Grandma home made",
                                                                                    "recipe": "1 tea spoon sugar"
@@ -91,7 +90,7 @@ class RecipeTestCase(base.BaseApiTestCase):
         self.assertEqual(result.status_code, 400)
         self.assertIn('please use keys name and recipe', str(result.data))
 
-    def test_get_recipe_get_recipe_should_return_recipe(self):
+    def test_get_should_return_recipe(self):
         """Tests if api can get recipes (get)"""
         self.register_user()
         result = self.login_user()
@@ -102,10 +101,9 @@ class RecipeTestCase(base.BaseApiTestCase):
                                                                 },
                                  headers=dict(Authorization=access_token)
                                  )
-        self.assertIn("Sweet pie".title(), str(res.data))
         result = self.client().post('/v2/categories/1/recipes', data={
                                                                                    "name": "Grandma home made",
-                                                                                   "recipe": "1 tea spoon sugar"
+                                                                                   "recipe": "one tea spoon sugar"
                                                                                     },
                                     headers=dict(Authorization=access_token)
                                     )
@@ -151,13 +149,13 @@ class RecipeTestCase(base.BaseApiTestCase):
                            )
         self.client().post('/v2/categories/1/recipes', data={
                                                             "name": "Grandma's home made",
-                                                            "recipe": "1 tea spoon sugar"
+                                                            "recipe": "one tea spoon sugar"
                                                             },
                            headers=dict(Authorization=access_token)
                            )
-        result = self.client().put('/v2/categories/1/recipes/1', data={
+        self.client().put('/v2/categories/1/recipes/1', data={
                                                                                     "name": "Uncle's homemade",
-                                                                                    "recipe": "1 bowl of onions"
+                                                                                    "recipe": "one bowl of onions"
                                                                                     },
                                    headers=dict(Authorization=access_token)
                                    )

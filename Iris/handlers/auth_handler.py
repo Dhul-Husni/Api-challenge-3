@@ -94,18 +94,11 @@ def assert_registration(request):
     :return: first_name, last_name, email, password, secret
     """
     try:
-        if request.headers['Content-Type'] == 'application/json':
-            email = request.json.get('email', '').strip().lower()
-            password = request.json.get('password', '').strip()
-            first_name = request.json.get('First Name', '').strip().lower()
-            last_name = request.json.get('Last Name', '').strip().lower()
-            secret = request.json.get('Secret word', '').strip().lower()
-        else:
-            email = request.form.get('email', '').strip().lower()
-            password = request.form.get('password', '').strip()
-            first_name = request.form.get('First Name', '').strip().lower()
-            last_name = request.form.get('Last Name', '').strip().lower()
-            secret = request.form.get('Secret word', '').strip().lower()
+        email = request.data.get('email', '').strip().lower()
+        password = request.data.get('password', '').strip()
+        first_name = request.data.get('First Name', '').strip().lower()
+        last_name = request.data.get('Last Name', '').strip().lower()
+        secret = request.data.get('Secret word', '').strip().lower()
     except AttributeError:
         raise IllegalCategoryName
     else:
@@ -122,12 +115,8 @@ def assert_registration(request):
 
 def assert_login(request):
     try:
-        if request.headers['Content-Type'] == 'application/json':
-            email = request.json.get('email', '').strip().lower()
-            password = request.json.get('password', '').strip().lower()
-        else:
-            email = request.form.get('email', '').strip().lower()
-            password = request.form.get('password', '').strip().lower()
+        email = request.data.get('email', '').strip().lower()
+        password = request.data.get('password', '').strip().lower()
     except AttributeError:
         raise IllegalCategoryName
     if not email or not password:
@@ -143,14 +132,9 @@ def assert_reset(request):
     :return: Validated, email, secret, password
     """
     try:
-        if request.headers['Content-Type'] == 'application/json':
-            secret = str(request.json.get('Secret word', '')).strip().lower()
-            password = str(request.json.get('password', ''))
-            email = str(request.json.get('email', '')).strip().lower()
-        else:
-            secret = str(request.form.get('Secret word', '')).strip().lower()
-            password = str(request.form.get('password', ''))
-            email = str(request.form.get('email', '')).strip().lower()
+        secret = str(request.data.get('Secret word', '')).strip().lower()
+        password = str(request.data.get('password', ''))
+        email = str(request.data.get('email', '')).strip().lower()
     except AttributeError:
         raise IllegalCategoryName
     if not email and not secret:

@@ -58,7 +58,7 @@ definitions:
   No_accesstoken_provided:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Please Provide an access token'
   # categories
@@ -100,21 +100,21 @@ definitions:
   Failed_category_post:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Please use keys name and recipe'
 
   Failed_get_category:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
-        default: '<Message containing the error>'
+        default: '<message containing the error>'
 
   None_exist_category:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Category does not exist'
 

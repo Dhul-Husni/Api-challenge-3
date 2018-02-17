@@ -1,4 +1,6 @@
 flask
+flask-api
+flask-cors
 flask-migrate
 flask-script
 psycopg2

@@ -46,7 +46,7 @@ definitions:
   Failed_logout:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Please Provide an access token'
 
@@ -75,23 +75,23 @@ definitions:
   Failed_get_category:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
-        default: '<Message containing the error>'
+        default: '<message containing the error>'
 
 
 
   Category_does_not_exist:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'The category does not exist, Would you like to create one?'
 
   successfully_deleted_category:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Category 1 was deleted successfully'
 

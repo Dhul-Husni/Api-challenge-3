@@ -1,6 +1,8 @@
 import os
 
-from flask import Flask, make_response, redirect
+from flask import  make_response, redirect
+from flask_api import FlaskAPI
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flasgger import Swagger
 
@@ -12,7 +14,8 @@ db = SQLAlchemy()
 
 
 def create_app(config_name):
-    iris = Flask(__name__)
+    iris = FlaskAPI(__name__)
+    CORS(iris)
 
     iris.config.from_object(app_config[config_name])
     iris.config.from_pyfile('configurations/config.py')

@@ -15,7 +15,7 @@ class AuthTestCase(base.BaseApiTestCase):
         res = self.client().post('/v2/auth/register', data=self.user_data)
         # get the results in json format
         result = json.loads(res.data.decode())
-        self.assertEqual(result['Message'], 'You have successfully registered')
+        self.assertEqual(result['message'], 'You have successfully registered')
         self.assertEqual(res.status_code, 201)
 
     def test_registration_with_invalid_email(self):
@@ -70,7 +70,7 @@ class AuthTestCase(base.BaseApiTestCase):
                                                                  'password': 'INVALID PASSWORD'
                                                                  })
         res = json.loads(login_res.data.decode())
-        self.assertEqual(res['Message'], 'Incorrect Email or Password')
+        self.assertEqual(res['message'], 'Incorrect Email or Password')
 
     def test_user_login(self):
         """Test user login"""
@@ -78,7 +78,7 @@ class AuthTestCase(base.BaseApiTestCase):
         login_res = self.client().post('/v2/auth/login', data=self.user_data)
 
         results = json.loads(login_res.data.decode())
-        self.assertEqual(results['Message'], 'You have successfully logged in')
+        self.assertEqual(results['message'], 'You have successfully logged in')
 
     def test_unregistered_user_login(self):
         none_exist = {
@@ -87,7 +87,7 @@ class AuthTestCase(base.BaseApiTestCase):
                      }
         login_res = self.client().post('/v2/auth/login', data=none_exist)
         result = json.loads(login_res.data.decode())
-        self.assertEqual(result['Message'], 'Incorrect Email or Password')
+        self.assertEqual(result['message'], 'Incorrect Email or Password')
 
     def test_already_registered(self):
         """Test register a user who is already registered"""
@@ -95,7 +95,7 @@ class AuthTestCase(base.BaseApiTestCase):
 
         second_res = self.client().post('/v2/auth/register', data=self.user_data)
         result = json.loads(second_res.data.decode())
-        self.assertEqual(result['Message'], 'User already exists. Please login')
+        self.assertEqual(result['message'], 'User already exists. Please login')
 
     def test_user_logout(self):
         """Test user logout"""
@@ -105,13 +105,13 @@ class AuthTestCase(base.BaseApiTestCase):
         results = json.loads(login_res.data.decode())
         logout_res = self.client().post('/v2/auth/logout', headers=dict(Authorization=results['Access token']))
         results = json.loads(logout_res.data.decode())
-        self.assertEqual(results['Message'], 'You have successfully logged out')
+        self.assertEqual(results['message'], 'You have successfully logged out')
 
     def test_user_logout_with_no_token(self):
         """Test user logout with invalid token"""
         logout_res = self.client().post('/v2/auth/logout')
         results = json.loads(logout_res.data.decode())
-        self.assertEqual(results['Message'], 'Please Provide an access token')
+        self.assertEqual(results['message'], 'Please Provide an access token')
 
     def test_user_reset_password(self):
         """Test user reset password"""

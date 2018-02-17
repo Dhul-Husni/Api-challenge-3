@@ -12,7 +12,7 @@ from Iris.handlers.search_handler import assert_search
 from Iris.handlers.recipes_handler import RecipeDoesNotExist
 from Iris.models.category_model import RecipeCategory
 
-four_oh_four = {"Message": "Sorry we could not find what you are looking for"}
+four_oh_four = {"message": "Sorry we could not find what you are looking for"}
 
 
 class SearchCategory(MethodView):

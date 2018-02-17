@@ -34,13 +34,13 @@ definitions:
   bad_logout:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Please Provide an access token'
 
   successfully_Loggedout:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'You have successfully logged out'

@@ -63,27 +63,27 @@ definitions:
   successfully_registered:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'You have successfully registered'
 
   Failed_registration:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Please fillout First Name, Last Name, email, password and Secret word'
 
   error_registration:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: '<Error>'
 
   Existing_user:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'User already exists. Please login'

@@ -13,13 +13,13 @@ produces:
 security:
   - TokenHeader: []
 parameters:
--   name: "res"
+-   name: "recipe_id"
     in: "path"
     description: "ID of Recipe to edit"
     required: true
     type: "integer"
     format: "int64"
--   name: "val"
+-   name: "category_id"
     in: "path"
     description: "ID of Category to return"
     required: true
@@ -71,14 +71,14 @@ definitions:
   No_accesstoken_provided:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Please Provide an access token'
 
   Wrong_keys:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'name and recipe cannot be empty'
 
@@ -109,21 +109,21 @@ definitions:
   Failed_get_category:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
-        default: '<Message containing the error>'
+        default: '<message containing the error>'
 
   Recipe_does_not_exist:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'The recipe does not exist'
 
   None_exist_category:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Category does not exist'
 

@@ -27,7 +27,7 @@ class RecipesGetView(MethodView):
         try:
             recipe_object = category.recipes.paginate(page=page, per_page=per_page)
         except AttributeError:
-            return make_response(jsonify({"Message": "Category does not exist"})), 404
+            return make_response(jsonify({"message": "Category does not exist"})), 404
         else:
             for recipe in recipe_object.items:
                 obj = {
@@ -94,9 +94,9 @@ class RecipesPostView(MethodView):
                 return make_response(response), 201
 
             elif recipe_exists:
-                return make_response(jsonify({"Message":"Recipe already exists"})), 404
+                return make_response(jsonify({"message":"Recipe already exists"})), 404
         else:
-            return make_response(jsonify({"Message": "Category does not exist"})), 404
+            return make_response(jsonify({"message": "Category does not exist"})), 404
 
 
 class RecipesPutView(MethodView):
@@ -140,7 +140,7 @@ class RecipeDeleteView(MethodView):
         for this_recipe in my_recipe:
             this_recipe.delete()
             return make_response(jsonify({
-                       "Message": 'Recipe {} was deleted successfully'.format(recipe_id)
+                       "message": 'Recipe {} was deleted successfully'.format(recipe_id)
 
                    })), 200
 

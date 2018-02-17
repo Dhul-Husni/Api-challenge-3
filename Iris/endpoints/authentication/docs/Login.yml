@@ -55,7 +55,7 @@ definitions:
   successfully_Loggedin:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'You have successfully logged in'
       Access token:
@@ -65,27 +65,27 @@ definitions:
   Failed_login:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Something went wrong. Please try again'
 
   Failed_login_auth:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Password Mismatch. Please try again'
 
   Failed_email_login:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Email address does not match any. Please try again'
 
   Exception:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: '<Error>'

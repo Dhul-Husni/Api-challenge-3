@@ -42,7 +42,7 @@ definitions:
   Failed_logout:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'Please Provide an access token'
 
@@ -85,7 +85,7 @@ definitions:
   Failed_category_post:
     type: "object"
     properties:
-      Message:
+      message:
         type: "string"
         default: 'please use keys name and detail'
 

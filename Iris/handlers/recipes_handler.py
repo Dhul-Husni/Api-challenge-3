@@ -8,7 +8,7 @@ from werkzeug.exceptions import HTTPException
 
 from Iris.models.category_model import RecipeCategory
 
-pattern = r'[a-zA-Z\s",_-]+'
+pattern = r"^[a-zA-Z\s',_-]+$"
 
 
 class IllegalRecipeName(HTTPException):
@@ -83,18 +83,14 @@ def assert_recipe(request):
     :return: True Else Exception
     """
     try:
-        if request.headers['Content-Type'] == 'application/json':
-            name = str(request.json.get('name', '')).strip().lower()
-            recipe = str(request.json.get('recipe', '')).strip().lower()
-        else:
-            name = str(request.form.get('name', '')).strip().lower()
-            recipe = str(request.form.get('recipe', '')).strip().lower()
+        name = str(request.data.get('name', '')).strip().lower()
+        recipe = str(request.data.get('recipe', '')).strip().lower()
     except AttributeError:
         raise IllegalRecipeName
     else:
         if not name or not recipe:
             raise ProvideCorrectName
-        validated = bool(re.search(pattern, name)) and bool(re.search(pattern, recipe))
+        validated = bool(re.match(pattern, name)) and bool(re.match(pattern, recipe))
 
         if validated:
             if len(name) >= 80 or len(recipe) >= 80:

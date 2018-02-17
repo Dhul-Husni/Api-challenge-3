@@ -6,7 +6,7 @@ import re
 
 from werkzeug.exceptions import HTTPException
 
-pattern = r'[a-zA-Z\s",_-]+'
+pattern = r"^[a-zA-Z\s',_-]+$"
 
 
 class IllegalCategoryName(HTTPException):
@@ -44,18 +44,14 @@ def assert_category(request):
     :return: True Else Exception
     """
     try:
-        if request.headers['Content-Type'] == 'application/json':
-            name = str(request.json.get('name', '')).strip().lower()
-            detail = str(request.json.get('detail', '')).strip().lower()
-        else:
-            name = str(request.form.get('name', '')).strip().lower()
-            detail = str(request.form.get('detail', '')).strip().lower()
+        name = str(request.data.get('name', '')).strip().lower()
+        detail = str(request.data.get('detail', '')).strip().lower()
     except AttributeError:
         raise IllegalCategoryName
     else:
         if not name or not detail:
             raise ProvideCorrectName
-        validated = bool(re.search(pattern, name)) and bool(re.search(pattern, detail))
+        validated = bool(re.match(pattern, name)) and bool(re.match(pattern, detail))
 
         if validated:
             if len(name) >= 80 or len(detail) >= 80:
