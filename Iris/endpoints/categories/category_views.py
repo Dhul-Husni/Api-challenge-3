@@ -68,7 +68,7 @@ class CategoryGetView(MethodView):
                                 'Has next': category.has_next,
                                 'Has prev': category.has_prev,
                                 }, {'message': 'Nothing here yet'})
-        return make_response(response), 200 if result else 404
+        return make_response(response), 200
 
 
 class CategoryIdGetView(MethodView):
@@ -106,8 +106,9 @@ class CategoryPutView(MethodView):
         name, detail = assert_category(request)
         edit_category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=id).first()
         if edit_category:
-            check_name_exists = RecipeCategory.query.filter_by(created_by=user_id).filter_by(name=name).first()
-            if not check_name_exists:
+            name_exists = RecipeCategory.query.filter_by(created_by=user_id).filter_by(name=name).first()
+            same_names = bool(edit_category.name == name_exists.name) if name_exists else False
+            if not name_exists or same_names:
                 edit_category.name = name
                 edit_category.detail = detail
                 edit_category.save()

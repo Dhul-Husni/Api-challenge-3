@@ -6,7 +6,7 @@ import re
 
 from werkzeug.exceptions import HTTPException
 
-pattern = r"^[a-zA-Z\s',_-]+$"
+pattern = r"^[a-zA-Z\s',_-.]+$"
 
 
 class IllegalCategoryName(HTTPException):
@@ -45,7 +45,9 @@ def assert_category(request):
     """
     try:
         name = str(request.data.get('name', '')).strip().lower()
+        name = re.sub(' +', ' ', name)
         detail = str(request.data.get('detail', '')).strip().lower()
+        detail = re.sub(' +',' ', detail)
     except AttributeError:
         raise IllegalCategoryName
     else:

@@ -113,7 +113,7 @@ class CategoryTestCase(base.BaseApiTestCase):
         result = self.client().get('/v2/categories',
                                    headers=dict(Authorization=access_token)
                                    )
-        self.assertEqual(result.status_code, 404)
+        self.assertEqual(result.status_code, 200)
         self.assertIn("Nothing here yet", str(result.data))
 
     def test_users_can_get_all_categories(self):

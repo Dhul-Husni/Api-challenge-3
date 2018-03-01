@@ -8,7 +8,7 @@ from werkzeug.exceptions import HTTPException
 
 from Iris.models.category_model import RecipeCategory
 
-pattern = r"^[a-zA-Z\s',_-]+$"
+pattern = r"^[a-zA-Z\s',_-.]+$"
 
 
 class IllegalRecipeName(HTTPException):
@@ -93,7 +93,7 @@ def assert_recipe(request):
         validated = bool(re.match(pattern, name)) and bool(re.match(pattern, recipe))
 
         if validated:
-            if len(name) >= 80 or len(recipe) >= 80:
+            if len(name) >= 80:
                 raise LongRecipeName
             return name, recipe
         else:

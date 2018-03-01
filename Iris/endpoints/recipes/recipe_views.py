@@ -44,7 +44,7 @@ class RecipesGetView(MethodView):
                                 'Prev Page': recipe_object.prev_num,
                                 'Has next': recipe_object.has_next,
                                 'Has previous': recipe_object.has_prev}, result)
-            return make_response(response), 200 if "Nothing Here yet" not in result else 404
+            return make_response(response), 200
 
 
 class RecipesIdGetView(MethodView):
