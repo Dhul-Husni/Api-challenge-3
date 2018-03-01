@@ -8,7 +8,7 @@ from werkzeug.exceptions import HTTPException
 
 from Iris.models.category_model import RecipeCategory
 
-pattern = r"^[a-zA-Z\s',_-.]+$"
+pattern = r"^[a-zA-Z\s',\._-]+$"
 
 
 class IllegalRecipeName(HTTPException):

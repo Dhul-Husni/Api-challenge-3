@@ -6,7 +6,7 @@ import re
 
 from werkzeug.exceptions import HTTPException
 
-pattern = r"^[a-zA-Z\s',_-.]+$"
+pattern = r"^[a-zA-Z\s',\._-]+$"
 
 
 class IllegalCategoryName(HTTPException):
