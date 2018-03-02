@@ -67,7 +67,7 @@ def assert_recipe_exists(user_id, category_id, recipe_id):
     """
     category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=category_id).first()
     try:
-        recipe_exists = category.recipes.filter_by(id=recipe_id).all()  # raises attr error if category is none
+        recipe_exists = category.recipes.filter_by(id=recipe_id).first()  # raises attr error if category is none
         if not recipe_exists:
             raise RecipeDoesNotExist
     except (AttributeError, RecipeDoesNotExist):

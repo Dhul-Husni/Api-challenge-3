@@ -56,14 +56,13 @@ class RecipesIdGetView(MethodView):
     def get(category_id, recipe_id):
         user_id = assert_token(request)
         my_recipe = assert_recipe_exists(user_id, category_id, recipe_id)
-        for the_recipe in my_recipe:
-            response = jsonify({
-                                "Recipe Name": the_recipe.name.title(),
-                                "Recipe": the_recipe.recipe.title(),
-                                "Date Created": the_recipe.date_created,
-                                "Date Modified": the_recipe.date_modified,
-                                })
-            return make_response(response), 200
+        response = jsonify({
+                            "Recipe Name": my_recipe.name.title(),
+                            "Recipe": my_recipe.recipe.title(),
+                            "Date Created": my_recipe.date_created,
+                            "Date Modified": my_recipe.date_modified,
+                            })
+        return make_response(response), 200
 
 
 class RecipesPostView(MethodView):
@@ -110,20 +109,20 @@ class RecipesPutView(MethodView):
         my_recipe = assert_recipe_exists(user_id, category_id, recipe_id)
         name, recipe = assert_recipe(request)
         category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=category_id).first()
-        recipe_name_exists = category.recipes.filter_by(name=name).first()
-        if not recipe_name_exists:
-            for the_recipe in my_recipe:
-                the_recipe.name = name
-                the_recipe.recipe = recipe
-                the_recipe.save()
-                reply = jsonify({
-                                "Recipe Name": the_recipe.name.title(),
-                                "Recipe": the_recipe.recipe.title(),
-                                "Date Created": the_recipe.date_created,
-                                "Date Modified": the_recipe.date_modified,
-                                })
-                reply.status_code = 201
-                return make_response(reply), 201
+        name_exists = category.recipes.filter_by(name=name).first()
+        same_name = bool(name_exists.name == my_recipe.name) if name_exists else False
+        if not name_exists or same_name:
+            my_recipe.name = name
+            my_recipe.recipe = recipe
+            my_recipe.save()
+            reply = jsonify({
+                            "Recipe Name": my_recipe.name.title(),
+                            "Recipe": my_recipe.recipe.title(),
+                            "Date Created": my_recipe.date_created,
+                            "Date Modified": my_recipe.date_modified,
+                            })
+            reply.status_code = 201
+            return make_response(reply), 201
         else:
             raise RecipeAlreadyExists
 
@@ -137,12 +136,11 @@ class RecipeDeleteView(MethodView):
     def delete(category_id, recipe_id):
         user_id = assert_token(request)
         my_recipe = assert_recipe_exists(user_id, category_id, recipe_id)
-        for this_recipe in my_recipe:
-            this_recipe.delete()
-            return make_response(jsonify({
-                       "message": 'Recipe {} was deleted successfully'.format(recipe_id)
+        my_recipe.delete()
+        return make_response(jsonify({
+                   "message": 'Recipe {} was deleted successfully'.format(recipe_id)
 
-                   })), 200
+               })), 200
 
 
 base_url = '/v2/'
