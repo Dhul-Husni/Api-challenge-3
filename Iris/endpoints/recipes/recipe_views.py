@@ -43,7 +43,11 @@ class RecipesGetView(MethodView):
             response = jsonify({'Next Page': recipe_object.next_num,
                                 'Prev Page': recipe_object.prev_num,
                                 'Has next': recipe_object.has_next,
-                                'Has previous': recipe_object.has_prev}, result)
+                                'Has prev': recipe_object.has_prev,
+                                'current page': recipe_object.page,
+                                'total items': recipe_object.total,
+                                'total pages': recipe_object.pages,
+                                }, result)
             return make_response(response), 200
 
 

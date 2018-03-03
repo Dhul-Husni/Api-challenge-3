@@ -57,17 +57,16 @@ class CategoryGetView(MethodView):
                 "Date Modified": each_category.date_modified
             }
             result.append(obj)
+        if not result:  # if the result is empty
+            result.append("Nothing here yet")
         response = jsonify({'Next page': category.next_num,
                             'Prev page': category.prev_num,
                             'Has next': category.has_next,
                             'Has prev': category.has_prev,
+                            'current page': category.page,
+                            'total items': category.total,
+                            'total pages': category.pages,
                             }, result)
-        if not result:  # if the result is empty
-            response = jsonify({'Next page': category.next_num,
-                                'Prev page': category.prev_num,
-                                'Has next': category.has_next,
-                                'Has prev': category.has_prev,
-                                }, {'message': 'Nothing here yet'})
         return make_response(response), 200
 
 
