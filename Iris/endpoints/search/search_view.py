@@ -42,7 +42,7 @@ class SearchCategory(MethodView):
         response = jsonify({'Next Page': category.next_num,
                             'Prev Page': category.prev_num,
                             'Has next':  category.has_next,
-                            'Has previous': category.has_prev}, result)
+                            'Has prev': category.has_prev}, result)
         response.status_code = 200 if result else 404
         return response
 
@@ -70,7 +70,7 @@ class SearchRecipe(MethodView):
                 if q in each_recipe.name or q in each_recipe.recipe:
                     obj = {
                         "id": each_recipe.id,
-                        "Name": each_recipe.name.title(),
+                        "name": each_recipe.name.title(),
                         "Recipe": each_recipe.recipe.title(),
                         "Date Created": each_recipe.date_created,
                         "Date Modified": each_recipe.date_modified
@@ -82,7 +82,7 @@ class SearchRecipe(MethodView):
             response = jsonify({'Next Page': my_recipes.next_num,
                                 'Prev Page': my_recipes.prev_num,
                                 'Has next':  my_recipes.has_next,
-                                'Has previous': my_recipes.has_prev}, result)
+                                'Has prev': my_recipes.has_prev}, result)
             response.status_code = 200 if result else 404
             return response
 
@@ -124,7 +124,7 @@ class SearchAll(MethodView):
         response = jsonify({'Next Page': category.next_num,
                             'Prev Page': category.prev_num,
                             'Has next':  category.has_next,
-                            'Has previous': category.has_prev}, result)
+                            'Has prev': category.has_prev}, result)
         response.status_code = 200 if result else 404
         return response
 
