@@ -22,11 +22,10 @@ class SearchCategory(MethodView):
     @swag_from("docs/Categories_search_get.yml", methods=['GET'])
     def get():
         user_id = assert_token(request)
-        page, per_page = assert_pagination(request)
         q = assert_search(request)
-        category = RecipeCategory.query.filter_by(created_by=user_id).paginate(page=page,per_page=per_page)
+        category = RecipeCategory.query.filter_by(created_by=user_id).all()
         result = []
-        for each_category in category.items:
+        for each_category in category:
             if q in each_category.name or q in each_category.detail:
                 obj = {
                     "id": each_category.id,
@@ -39,10 +38,10 @@ class SearchCategory(MethodView):
         if not result:
             message = four_oh_four
             result.append(message)
-        response = jsonify({'Next Page': category.next_num,
-                            'Prev Page': category.prev_num,
-                            'Has next':  category.has_next,
-                            'Has prev': category.has_prev}, result)
+        response = jsonify({'Next Page': None,
+                            'Prev Page': None,
+                            'Has next':  False,
+                            'Has prev': False}, result)
         response.status_code = 200 if result else 404
         return response
 
@@ -57,16 +56,15 @@ class SearchRecipe(MethodView):
         """This searches the recipes for items with similar or equal names to the get
         parameter q"""
         user_id = assert_token(request)
-        page, per_page = assert_pagination(request)
         q = assert_search(request)
         category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=id).first()
         try:
-            my_recipes = category.recipes.paginate(page=page, per_page=per_page)
+            my_recipes = category.all()
         except AttributeError:
             raise RecipeDoesNotExist
         else:
             result = []
-            for each_recipe in my_recipes.items:
+            for each_recipe in my_recipes:
                 if q in each_recipe.name or q in each_recipe.recipe:
                     obj = {
                         "id": each_recipe.id,
@@ -79,10 +77,10 @@ class SearchRecipe(MethodView):
             if not result:
                 message = four_oh_four
                 result.append(message)
-            response = jsonify({'Next Page': my_recipes.next_num,
-                                'Prev Page': my_recipes.prev_num,
-                                'Has next':  my_recipes.has_next,
-                                'Has prev': my_recipes.has_prev}, result)
+            response = jsonify({'Next Page': None,
+                                'Prev Page': None,
+                                'Has next':  False,
+                                'Has prev': False},result)
             response.status_code = 200 if result else 404
             return response
 
@@ -93,11 +91,10 @@ class SearchAll(MethodView):
     @staticmethod
     def get():
         user_id = assert_token(request)
-        page, per_page = assert_pagination(request)
         q = assert_search(request)
-        category = RecipeCategory.query.filter_by(created_by=user_id).paginate(page=page, per_page=per_page)
+        category = RecipeCategory.query.filter_by(created_by=user_id).all()
         result = []
-        for everything in category.items:
+        for everything in category:
             if q in everything.name or q in everything.detail:
                 obj = {
                     "id": everything.id,
@@ -121,10 +118,10 @@ class SearchAll(MethodView):
         if not result:
             message = four_oh_four
             result.append(message)
-        response = jsonify({'Next Page': category.next_num,
-                            'Prev Page': category.prev_num,
-                            'Has next':  category.has_next,
-                            'Has prev': category.has_prev}, result)
+        response = jsonify({'Next Page': None,
+                            'Prev Page': None,
+                            'Has next':  False,
+                            'Has prev': False}, result)
         response.status_code = 200 if result else 404
         return response
 
