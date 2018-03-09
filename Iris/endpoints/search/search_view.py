@@ -58,8 +58,9 @@ class SearchRecipe(MethodView):
         user_id = assert_token(request)
         q = assert_search(request)
         category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=id).first()
+        print(category)
         try:
-            my_recipes = category.all()
+            my_recipes = category.recipes.all()
         except AttributeError:
             raise RecipeDoesNotExist
         else:

@@ -57,8 +57,7 @@ class InvalidSecretKey(HTTPException):
     :raise: Invalid reset secret
     """
     def __init__(self):
-        HTTPException.__init__(self, "Invalid email or secret word please try again. type \
-                                'send me an email' in the secret word key to recover via email")
+        HTTPException.__init__(self, "Invalid email or secret word please try again. choose send me an email to recover via email")
         self.code = 401
 
 
