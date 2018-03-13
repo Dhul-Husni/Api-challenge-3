@@ -46,7 +46,8 @@ class CategoryGetView(MethodView):
     def get():
         user_id = assert_token(request)
         page, per_page = assert_pagination(request)
-        category = RecipeCategory.query.filter_by(created_by=user_id).paginate(page=page, per_page=per_page)
+        category = RecipeCategory.query.filter_by(created_by=user_id).order_by(RecipeCategory.id)\
+            .paginate(page=page, per_page=per_page)
         result = []
         for each_category in category.items:
             obj = {
