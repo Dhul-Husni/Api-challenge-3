@@ -25,7 +25,7 @@ class RecipesGetView(MethodView):
         result = []
         category = RecipeCategory.query.filter_by(created_by=user_id).filter_by(id=id).first()
         try:
-            recipe_object = category.recipes.order_by(category.recipes.id)\
+            recipe_object = category.recipes.order_by(Recipes.id)\
                     .paginate(page=page, per_page=per_page)
         except AttributeError:
             return make_response(jsonify({"message": "Category does not exist"})), 404
