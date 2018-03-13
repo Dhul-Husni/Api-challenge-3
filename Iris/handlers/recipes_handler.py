@@ -25,7 +25,7 @@ class LongRecipeName(HTTPException):
     Short Name exception
     """
     def __init__(self):
-        HTTPException.__init__(self, "Please use a shorter name or recipe(description)")
+        HTTPException.__init__(self, "Please use a shorter name")
         self.code = 411
 
 
@@ -93,7 +93,7 @@ def assert_recipe(request):
         validated = bool(re.match(pattern, name)) and bool(re.match(pattern, recipe))
 
         if validated:
-            if len(name) >= 80:
+            if len(name) >= 30:
                 raise LongRecipeName
             return name, recipe
         else:

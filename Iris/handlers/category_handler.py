@@ -56,7 +56,7 @@ def assert_category(request):
         validated = bool(re.match(pattern, name)) and bool(re.match(pattern, detail))
 
         if validated:
-            if len(name) >= 80 or len(detail) >= 80:
+            if len(name) >= 30 or len(detail) >= 70:
                 raise LongCategoryName
             return name, detail
         else:

@@ -6,7 +6,7 @@ class Recipes(db.Model):
     """
     __tablename__ = 'recipes'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(80), nullable=False)
     recipe = db.Column(db.Text)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
