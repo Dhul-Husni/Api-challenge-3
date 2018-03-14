@@ -68,7 +68,8 @@ class CategoryGetView(MethodView):
                             'total items': category.total,
                             'total pages': category.pages,
                             }, result)
-        return make_response(response), 200
+        status = 200 if result[0] != "Nothing here yet" else 222
+        return make_response(response), status
 
 
 class CategoryIdGetView(MethodView):

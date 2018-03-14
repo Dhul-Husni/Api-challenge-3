@@ -49,7 +49,8 @@ class RecipesGetView(MethodView):
                                 'total items': recipe_object.total,
                                 'total pages': recipe_object.pages,
                                 }, result)
-            return make_response(response), 200
+            status = 200 if result[0] != "Nothing Here yet" else 222
+            return make_response(response), status
 
 
 class RecipesIdGetView(MethodView):
